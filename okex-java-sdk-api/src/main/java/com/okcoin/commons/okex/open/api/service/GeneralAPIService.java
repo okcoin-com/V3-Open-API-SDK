@@ -1,7 +1,10 @@
 package com.okcoin.commons.okex.open.api.service;
 
+
 import com.okcoin.commons.okex.open.api.bean.futures.result.ExchangeRate;
 import com.okcoin.commons.okex.open.api.bean.futures.result.ServerTime;
+
+import java.util.List;
 
 /**
  * OKEX general api

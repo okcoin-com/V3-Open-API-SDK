@@ -1,18 +1,21 @@
 package com.okcoin.commons.okex.open.api.bean.swap.param;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.math.BigDecimal;
 
-public class LevelRateParam {
+public class LevelRateParam extends JSONObject {
 
     /**
      * 1.LONG
      * 2.SHORT
      * 3.全仓杠杆
      */
-    private Integer side;
-    private BigDecimal leverage;
+    private String side;
+    private String leverage;
 
-    public LevelRateParam(Integer side, BigDecimal levelRate) {
+
+    public LevelRateParam(String side, String levelRate) {
         this.side = side;
         this.leverage = levelRate;
     }
@@ -20,21 +23,21 @@ public class LevelRateParam {
     public LevelRateParam() {
     }
 
-    public Integer getSide() {
+    public String getSide() {
         return side;
     }
 
-    public void setSide(Integer side) {
+    public void setSide(String side) {
         this.side = side;
     }
 
-    public BigDecimal getLevelRate() {
+    public String getLeverage() {
         return leverage;
     }
 
-    public void setLevelRate(BigDecimal levelRate) {
-        this.leverage = levelRate;
+    public void setLeverage(String leverage) {
+        this.leverage = leverage;
     }
-
-
 }
+
+

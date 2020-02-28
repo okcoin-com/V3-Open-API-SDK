@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OKExSDK
 {
-    class HttpInterceptor : DelegatingHandler
+    public class HttpInterceptor : DelegatingHandler
     {
         private string _apiKey;
         private string _passPhrase;

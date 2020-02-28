@@ -4,11 +4,24 @@ public class PlaceOrderParam {
     /**
      * 客户端下单 标示id 非必填
      */
+    private String instrument_id;
     private String client_oid;
+    private String order_id;
+
+
+    public String getInstrument_id() {
+        return instrument_id;
+    }
+
+    public void setInstrument_id(String instrument_id) {
+        this.instrument_id = instrument_id;
+    }
+
+
     /**
      * 币对如 etc_eth
      */
-    private String instrument_id;
+
     /**
      * 买卖类型 buy/sell
      */
@@ -29,16 +42,43 @@ public class PlaceOrderParam {
      * 市价单使用 价格
      */
     private String notional;
+    private String order_type;
+    /**
+     * 1币币交易 2杠杆交易
+     */
+    private String margin_trading;
+
+    public String getOrder_type() {
+        return order_type;
+    }
+
+    public void setOrder_type(String order_type) {
+        this.order_type = order_type;
+    }
+
+
 
     /**
      * 来源（web app ios android）
      */
     private Byte source = 0;
+    public String getOrder_id() {
+        return order_id;
+    }
 
-    /**
-     * 1币币交易 2杠杆交易
-     */
-    private Byte margin_trading;
+    public void setOrder_id(String order_id) {
+        this.order_id = order_id;
+    }
+
+    public String getMargin_trading() {
+        return margin_trading;
+    }
+
+    public void setMargin_trading(String margin_trading) {
+        this.margin_trading = margin_trading;
+    }
+
+
 
     public String getClient_oid() {
         return this.client_oid;
@@ -49,13 +89,6 @@ public class PlaceOrderParam {
     }
 
 
-    public String getInstrument_id() {
-        return this.instrument_id;
-    }
-
-    public void setInstrument_id(final String instrument_id) {
-        this.instrument_id = instrument_id;
-    }
 
     public String getSide() {
         return this.side;
@@ -107,11 +140,5 @@ public class PlaceOrderParam {
     }
 
 
-    public Byte getMargin_trading() {
-        return this.margin_trading;
-    }
 
-    public void setMargin_trading(final Byte margin_trading) {
-        this.margin_trading = margin_trading;
-    }
 }

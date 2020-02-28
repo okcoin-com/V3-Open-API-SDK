@@ -26,17 +26,22 @@ public class PpOrder {
      * 合约名称，如BTC-USD-SWAP
      */
     private String instrument_id;
+    /**
+     * 	参数填数字，0：普通委托（order type不填或填0都是普通委托） 1：只做Maker（Post only） 2：全部成交或立即取消（FOK） 3：立即成交并取消剩余（IOC）
+     */
+    private String order_type;
 
     public PpOrder() {
     }
 
-    public PpOrder(String client_oid, String size, String type, String match_price, String price, String instrument_id) {
+    public PpOrder(String client_oid, String size, String type, String match_price, String price, String instrument_id, String order_type) {
         this.client_oid = client_oid;
         this.size = size;
         this.type = type;
         this.match_price = match_price;
         this.price = price;
         this.instrument_id = instrument_id;
+        this.order_type = order_type;
     }
 
     public String getClient_oid() {
@@ -87,4 +92,24 @@ public class PpOrder {
         this.instrument_id = instrument_id;
     }
 
+    public String getOrder_type() {
+        return order_type;
+    }
+
+    public void setOrder_type(String order_type) {
+        this.order_type = order_type;
+    }
+
+    @Override
+    public String toString() {
+        return "PpOrder{" +
+                "client_oid='" + client_oid + '\'' +
+                ", size='" + size + '\'' +
+                ", type='" + type + '\'' +
+                ", match_price='" + match_price + '\'' +
+                ", price='" + price + '\'' +
+                ", instrument_id='" + instrument_id + '\'' +
+                ", order_type='" + order_type + '\'' +
+                '}';
+    }
 }

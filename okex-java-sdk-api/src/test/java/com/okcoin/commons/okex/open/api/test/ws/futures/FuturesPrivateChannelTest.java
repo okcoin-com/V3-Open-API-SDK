@@ -53,7 +53,8 @@ public class FuturesPrivateChannelTest {
     @Test
     public void positionChannel() {
         ArrayList<String> channel = Lists.newArrayList();
-        channel.add("futures/position:XRP-USD-190927");
+        channel.add("futures/position:XRP-USDT-200327");
+        //channel.add("futures/position:BTC-USD-200327");
         try {
             Thread.sleep(100);
         } catch (Exception e) {
@@ -76,7 +77,7 @@ public class FuturesPrivateChannelTest {
     @Test
     public void accountChannel() {
         ArrayList<String> channel = Lists.newArrayList();
-        channel.add("futures/account:BTC");
+        channel.add("futures/account:XRP-USDT");
         try {
             Thread.sleep(100);
         } catch (Exception e) {
@@ -99,7 +100,27 @@ public class FuturesPrivateChannelTest {
     @Test
     public void orderChannel() {
         ArrayList<String> channel = Lists.newArrayList();
-        channel.add("futures/order:XRP-USD-190927");
+        channel.add("futures/order:XRP-USDT-200327");
+        try {
+            Thread.sleep(100);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //订阅
+        webSocketClient.subscribe(channel);
+        //为保证测试方法不停，需要让线程延迟
+        try {
+            Thread.sleep(10000000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    public void algoOrderChannel() {
+        ArrayList<String> channel = Lists.newArrayList();
+        channel.add("futures/order_algo:XRP-USDT-200327");
         try {
             Thread.sleep(100);
         } catch (Exception e) {
@@ -119,7 +140,7 @@ public class FuturesPrivateChannelTest {
     @Test
     public void unsubscribeChannel() {
         ArrayList<String> channel = Lists.newArrayList();
-        channel.add("futures/order:BTC-USD-190927");
+        channel.add("futures/order:BTC-USDT-190927");
         try {
             Thread.sleep(100);
         } catch (Exception e) {

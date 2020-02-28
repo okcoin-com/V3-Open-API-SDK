@@ -20,6 +20,12 @@ import java.util.List;
  */
 public interface AccountAPI {
 
+    @GET("/api/account/v3/wallet")
+    Call<List<Wallet>> getWallet();
+
+    @GET("/api/account/v3/wallet/{currency}")
+    Call<List<Wallet>> getWallet(@Path("currency") String currency);
+
 
     @POST("/api/account/v3/transfer")
     Call<JSONObject> transfer(@Body JSONObject jsonObject);
@@ -31,15 +37,12 @@ public interface AccountAPI {
     @GET("/api/account/v3/currencies")
     Call<List<Currency>> getCurrencies();
 
+    //
     @GET("/api/account/v3/ledger")
-    Call<List<Ledger>> getLedger(@Query("txn_type") Integer type, @Query("currency") String currency,
-                                 @Query("before") Integer before, @Query("after") Integer after, @Query("limit") int limit);
+    Call<JSONArray> getLedger(@Query("type") String type,@Query("currency") String currency,
+                                 @Query("before") String before, @Query("after") String after, @Query("limit") String limit);
 
-    @GET("/api/account/v3/wallet")
-    Call<List<Wallet>> getWallet();
 
-    @GET("/api/account/v3/wallet/{currency}")
-    Call<List<Wallet>> getWallet(@Path("currency") String currency);
 
     @GET("/api/account/v3/deposit/address")
     Call<JSONArray> getDepositAddress(@Query("currency") String currency);
@@ -61,4 +64,20 @@ public interface AccountAPI {
 
     @GET("/api/account/v3/deposit/history/{currency}")
     Call<JSONArray> getDepositHistory(@Path("currency") String currency);
+    //查询所有币种提币记录
+    @GET("/api/account/v3/withdrawal/history")
+    Call<JSONArray> getWithdrawalHistory();
+    //查看单个提币记录
+    @GET("/api/account/v3/withdrawal/history/{currency}")
+    Call<JSONArray> getWithdrawalHistory(@Path("currency") String currency);
+
+    //获取子账户余额
+    @GET("/api/account/v3/sub-account")
+    Call<JSONObject> getSubAccount(@Query("sub-account") String sub_account);
+
+    //获取账户资产估值
+    @GET("/api/account/v3/asset-valuation")
+    Call<JSONObject> getAllAccount(@Query("account_type") String account_type,
+                                   @Query("valuation_currency") String valuation_currency);
+
 }

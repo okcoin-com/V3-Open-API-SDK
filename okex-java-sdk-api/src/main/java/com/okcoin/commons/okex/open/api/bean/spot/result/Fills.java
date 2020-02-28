@@ -2,11 +2,30 @@ package com.okcoin.commons.okex.open.api.bean.spot.result;
 
 public class Fills {
 
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    private String currency;
     // 账单 id
     private Long ledger_id;
     // 币种 id
     private String instrument_id;
-    private String product_id;
+
+    public String getTrade_id() {
+        return trade_id;
+    }
+
+    public void setTrade_id(String trade_id) {
+        this.trade_id = trade_id;
+    }
+
+    private String trade_id;
+    //private String product_id;
     // 价格
     private String price;
     // 数量
@@ -15,9 +34,9 @@ public class Fills {
     private Long order_id;
     // 创建时间
     private String timestamp;
-    private String created_at;
+    //private String created_at;
     // 流动方向
-    private String liquidity;
+    //private String liquidity;
     private String exec_type;
     // 手续费
     private String fee;
@@ -40,13 +59,13 @@ public class Fills {
         this.instrument_id = instrument_id;
     }
 
-    public String getProduct_id() {
+    /*public String getProduct_id() {
         return this.product_id;
     }
 
     public void setProduct_id(final String product_id) {
         this.product_id = product_id;
-    }
+    }*/
 
     public String getPrice() {
         return this.price;
@@ -80,7 +99,7 @@ public class Fills {
         this.timestamp = timestamp;
     }
 
-    public String getCreated_at() {
+    /*public String getCreated_at() {
         return this.created_at;
     }
 
@@ -94,7 +113,7 @@ public class Fills {
 
     public void setLiquidity(final String liquidity) {
         this.liquidity = liquidity;
-    }
+    }*/
 
     public String getExec_type() {
         return this.exec_type;

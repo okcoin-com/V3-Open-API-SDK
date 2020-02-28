@@ -6,7 +6,7 @@ import java.util.List;
 public class OrderCancelResult {
 
     private String instrument_id = "";
-    private List<String> order_ids = new LinkedList<>();
+    private List<String> order_ids = new LinkedList<String>();
     private String result = "";
 
     public OrderCancelResult(String instrument_id, List<String> order_ids, String result) {

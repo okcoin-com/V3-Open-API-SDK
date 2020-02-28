@@ -12,6 +12,14 @@ public class ApiOrderVO {
     public ApiOrderVO() {
     }
 
+    public ApiOrderVO(String order_id, String client_oid, String error_code, String error_message, String result) {
+        this.order_id = order_id;
+        this.client_oid = client_oid;
+        this.error_code = error_code;
+        this.error_message = error_message;
+        this.result = result;
+    }
+
     public String getOrder_id() {
         return order_id;
     }
@@ -49,14 +57,6 @@ public class ApiOrderVO {
     }
 
     public void setResult(String result) {
-        this.result = result;
-    }
-
-    public ApiOrderVO(String order_id, String client_oid, String error_code, String error_message, String result) {
-        this.order_id = order_id;
-        this.client_oid = client_oid;
-        this.error_code = error_code;
-        this.error_message = error_message;
         this.result = result;
     }
 }

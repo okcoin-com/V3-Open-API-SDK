@@ -15,5 +15,6 @@ namespace OKExSDK.Models.Swap
         /// 订单列表
         /// </summary>
         public string order_data { get; set; }
+
     }
 }

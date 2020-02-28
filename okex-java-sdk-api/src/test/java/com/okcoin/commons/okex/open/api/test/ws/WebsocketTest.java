@@ -6,6 +6,7 @@ import com.okcoin.commons.okex.open.api.websocket.WebSocketAdapter;
 import com.okcoin.commons.okex.open.api.websocket.WebSocketClient;
 import org.junit.Test;
 
+
 public class WebsocketTest {
 
 

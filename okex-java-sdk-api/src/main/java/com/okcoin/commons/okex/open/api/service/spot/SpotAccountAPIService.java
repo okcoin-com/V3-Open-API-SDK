@@ -1,5 +1,7 @@
 package com.okcoin.commons.okex.open.api.service.spot;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.okcoin.commons.okex.open.api.bean.spot.result.Account;
 import com.okcoin.commons.okex.open.api.bean.spot.result.Ledger;
 import com.okcoin.commons.okex.open.api.bean.spot.result.ServerTimeDto;
@@ -35,15 +37,16 @@ public interface SpotAccountAPIService {
     List<Account> getAccounts();
 
     /**
-     * 账单列表
-     *
+     * 币币账单流水
      * @param currency
-     * @param from
-     * @param to
+     * @param before
+     * @param after
      * @param limit
+     * @param type
+     * @param
      * @return
      */
-    List<Ledger> getLedgersByCurrency(String currency, String from, String to, String limit);
+    JSONArray getLedgersByCurrency(String currency, String before, String after, String limit,String type);
 
     /**
      * 单币资产
@@ -52,4 +55,8 @@ public interface SpotAccountAPIService {
      * @return
      */
     Account getAccountByCurrency(final String currency);
+
+    JSONObject getTradeFee();
+
+
 }

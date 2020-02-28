@@ -57,4 +57,14 @@ public class Trades {
 
     public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
 
+    @Override
+    public String toString() {
+        return "Trades{" +
+                "trade_id='" + trade_id + '\'' +
+                ", side='" + side + '\'' +
+                ", price='" + price + '\'' +
+                ", qty='" + qty + '\'' +
+                ", timestamp='" + timestamp + '\'' +
+                '}';
+    }
 }

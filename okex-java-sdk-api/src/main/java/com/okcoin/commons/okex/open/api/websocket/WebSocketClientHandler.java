@@ -5,8 +5,6 @@ import io.netty.channel.*;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
-
-import java.nio.charset.StandardCharsets;
 import java.util.zip.Inflater;
 
 public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
@@ -86,7 +84,6 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        this.webSocketClient.closeTimer();
     }
 
     private static String uncompress(ByteBuf buf) {
@@ -95,15 +92,15 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
             ByteBufInputStream bis = new ByteBufInputStream(buf);
             bis.read(temp);
             bis.close();
-            Inflater decompresses = new Inflater(true);
-            decompresses.setInput(temp, 0, temp.length);
+            Inflater decompresser = new Inflater(true);
+            decompresser.setInput(temp, 0, temp.length);
             StringBuilder sb = new StringBuilder();
             byte[] result = new byte[1024];
-            while (!decompresses.finished()) {
-                int resultLength = decompresses.inflate(result);
-                sb.append(new String(result, 0, resultLength, StandardCharsets.UTF_8));
+            while (!decompresser.finished()) {
+                int resultLength = decompresser.inflate(result);
+                sb.append(new String(result, 0, resultLength, "UTF-8"));
             }
-            decompresses.end();
+            decompresser.end();
             return sb.toString();
         }catch (Exception e) {
             e.printStackTrace();

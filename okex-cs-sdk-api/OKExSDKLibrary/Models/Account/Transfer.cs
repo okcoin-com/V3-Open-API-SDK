@@ -30,5 +30,6 @@ namespace OKExSDK.Models.Account
         /// 杠杆币对，如：eos-usdt，仅限已开通杠杆的币对
         /// </summary>
         public string instrument_id { get; set; }
+        public string to_instrument_id { get; set; }
     }
 }

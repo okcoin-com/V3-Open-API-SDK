@@ -4,34 +4,34 @@ import java.math.BigDecimal;
 
 public class ApiUserRiskVO {
 
-    private BigDecimal long_leverage;
-    private BigDecimal short_leverage;
+    private String long_leverage;
+    private String short_leverage;
     private String margin_mode;
     private String instrument_id;
 
     public ApiUserRiskVO() {
     }
 
-    public ApiUserRiskVO(BigDecimal long_leverage, BigDecimal short_leverage, String margin_mode, String instrument_id) {
+    public ApiUserRiskVO(String long_leverage, String short_leverage, String margin_mode, String instrument_id) {
         this.long_leverage = long_leverage;
         this.short_leverage = short_leverage;
         this.margin_mode = margin_mode;
         this.instrument_id = instrument_id;
     }
 
-    public BigDecimal getLong_leverage() {
+    public String getLong_leverage() {
         return long_leverage;
     }
 
-    public void setLong_leverage(BigDecimal long_leverage) {
+    public void setLong_leverage(String long_leverage) {
         this.long_leverage = long_leverage;
     }
 
-    public BigDecimal getShort_leverage() {
+    public String getShort_leverage() {
         return short_leverage;
     }
 
-    public void setShort_leverage(BigDecimal short_leverage) {
+    public void setShort_leverage(String short_leverage) {
         this.short_leverage = short_leverage;
     }
 

@@ -1,11 +1,8 @@
 package com.okcoin.commons.okex.open.api.service.spot.impl;
 
-import com.okcoin.commons.okex.open.api.bean.spot.param.OrderParamDto;
-import com.okcoin.commons.okex.open.api.bean.spot.param.PlaceOrderParam;
-import com.okcoin.commons.okex.open.api.bean.spot.result.BatchOrdersResult;
-import com.okcoin.commons.okex.open.api.bean.spot.result.Fills;
-import com.okcoin.commons.okex.open.api.bean.spot.result.OrderInfo;
-import com.okcoin.commons.okex.open.api.bean.spot.result.OrderResult;
+import com.alibaba.fastjson.JSONObject;
+import com.okcoin.commons.okex.open.api.bean.spot.param.*;
+import com.okcoin.commons.okex.open.api.bean.spot.result.*;
 import com.okcoin.commons.okex.open.api.client.APIClient;
 import com.okcoin.commons.okex.open.api.config.APIConfiguration;
 import com.okcoin.commons.okex.open.api.service.spot.SpotOrderAPIServive;
@@ -36,13 +33,28 @@ public class SpotOrderApiServiceImpl implements SpotOrderAPIServive {
     }
 
     @Override
-    public OrderResult cancleOrderByOrderId(final PlaceOrderParam order, final String orderId) {
-        return this.client.executeSync(this.spotOrderAPI.cancleOrderByOrderId(orderId, order));
+    public OrderResult cancleOrderByOrderId(final PlaceOrderParam order, final String order_id) {
+        return this.client.executeSync(this.spotOrderAPI.cancleOrderByOrderId(order_id, order));
     }
 
     @Override
-    public OrderResult cancleOrderByOrderId_post(final PlaceOrderParam order, final String orderId) {
-        return this.client.executeSync(this.spotOrderAPI.cancleOrderByOrderId_1(orderId, order));
+    public OrderResult cancleOrderByOrderId_post(final PlaceOrderParam order, final String order_id) {
+        return this.client.executeSync(this.spotOrderAPI.cancleOrderByOrderId_1(order_id, order));
+    }
+
+    @Override
+    public Map<String, Object> batchCancleOrders_2(List<OrderParamDto> cancleOrders) {
+        return this.client.executeSync(this.spotOrderAPI.batchCancleOrders_2(cancleOrders));
+    }
+
+    @Override
+    public Map<String, Object> batch_orderCle(List<OrderParamDto> orderParamDto) {
+        return this.client.executeSync(this.spotOrderAPI.batch_orderCle(orderParamDto));
+    }
+
+    @Override
+    public OrderResult cancleOrderByClientOid(PlaceOrderParam order, String client_oid) {
+        return this.client.executeSync(this.spotOrderAPI.cancleOrderByOrderId(client_oid, order));
     }
 
     @Override
@@ -51,28 +63,51 @@ public class SpotOrderApiServiceImpl implements SpotOrderAPIServive {
     }
 
     @Override
-    public Map<String, BatchOrdersResult> cancleOrders_post(final List<OrderParamDto> cancleOrders) {
+    public Map<String, Object> cancleOrders_post(final List<OrderParamDto> cancleOrders) {
         return this.client.executeSync(this.spotOrderAPI.batchCancleOrders_1(cancleOrders));
     }
 
+
+
     @Override
-    public OrderInfo getOrderByOrderId(final String product, final String orderId) {
-        return this.client.executeSync(this.spotOrderAPI.getOrderByOrderId(orderId, product));
+    public OrderInfo getOrderByOrderId(final String instrument_id, final String order_id) {
+        return this.client.executeSync(this.spotOrderAPI.getOrderByOrderId(order_id, instrument_id));
     }
 
     @Override
-    public List<OrderInfo> getOrders(final String product, final String status, final String from, final String to, final String limit) {
-        return this.client.executeSync(this.spotOrderAPI.getOrders(product, status, from, to, limit));
+    public OrderInfo getOrderByClientOid(String instrument_id, String client_oid) {
+        return this.client.executeSync(this.spotOrderAPI.getOrderByClientOid(client_oid,instrument_id));
     }
 
     @Override
-    public List<OrderInfo> getPendingOrders(final String from, final String to, final String limit, final String instrument_id) {
-        return this.client.executeSync(this.spotOrderAPI.getPendingOrders(from, to, limit, instrument_id));
+    public List<OrderInfo> getOrders(final String instrument_id, final String state, final String after, final String before, final String limit) {
+        return this.client.executeSync(this.spotOrderAPI.getOrders(instrument_id, state, after, before, limit));
     }
 
     @Override
-    public List<Fills> getFills(final String orderId, final String product, final String from, final String to, final String limit) {
-        return this.client.executeSync(this.spotOrderAPI.getFills(orderId, product, from, to, limit));
+    public List<PendingOrdersInfo> getPendingOrders(final String before, final String after, final String limit, final String instrument_id) {
+        return this.client.executeSync(this.spotOrderAPI.getPendingOrders(before, after, limit, instrument_id));
     }
+
+    @Override
+    public List<Fills> getFills(final String order_id, final String instrument_id, final String before, final String after, final String limit) {
+        return this.client.executeSync(this.spotOrderAPI.getFills(order_id, instrument_id, before, after, limit));
+    }
+
+    @Override
+    public OrderAlgoResult addorder_algo(OrderAlgoParam order) {
+        return this.client.executeSync(this.spotOrderAPI.addorder_algo(order));
+    }
+
+    @Override
+    public OrderAlgoResult cancelOrder_algo(OrderAlgoParam order) {
+        return this.client.executeSync(this.spotOrderAPI.cancelOrder_algo(order));
+    }
+
+    @Override
+    public String getAlgoOrder(final String instrument_id, final String order_type, final String status, final String algo_id, final String before, final String after, final String limit) {
+        return this.client.executeSync(this.spotOrderAPI.getAlgoOrder(instrument_id,order_type,status,algo_id,before,after,limit));
+    }
+
 
 }

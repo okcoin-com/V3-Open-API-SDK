@@ -2,18 +2,52 @@ package com.okcoin.commons.okex.open.api.bean.spot.result;
 
 public class MarginBorrowOrderDto {
     private Long borrow_id;
-    private String product_id;
     private String instrument_id;
     private String currency;
     private String timestamp;
-    private String created_at;
-    private String last_interest_time;
     private String amount;
     private String interest;
-    private String repay_amount;
+
+    @Override
+    public String toString() {
+        return "MarginBorrowOrderDto{" +
+                "borrow_id=" + borrow_id +
+                ", instrument_id='" + instrument_id + '\'' +
+                ", currency='" + currency + '\'' +
+                ", timestamp='" + timestamp + '\'' +
+                ", amount='" + amount + '\'' +
+                ", interest='" + interest + '\'' +
+                ", returned_amount='" + returned_amount + '\'' +
+                ", paid_interest='" + paid_interest + '\'' +
+                ", last_interest_time='" + last_interest_time + '\'' +
+                ", force_repay_time='" + force_repay_time + '\'' +
+                ", rate='" + rate + '\'' +
+                '}';
+    }
+
     private String returned_amount;
-    private String repay_interest;
     private String paid_interest;
+    private String last_interest_time;
+
+    public String getForce_repay_time() {
+        return force_repay_time;
+    }
+
+    public void setForce_repay_time(String force_repay_time) {
+        this.force_repay_time = force_repay_time;
+    }
+
+    public String getRate() {
+        return rate;
+    }
+
+    public void setRate(String rate) {
+        this.rate = rate;
+    }
+
+    private String force_repay_time;
+    private String rate;
+
 
     public Long getBorrow_id() {
         return this.borrow_id;
@@ -21,14 +55,6 @@ public class MarginBorrowOrderDto {
 
     public void setBorrow_id(final Long borrow_id) {
         this.borrow_id = borrow_id;
-    }
-
-    public String getProduct_id() {
-        return this.product_id;
-    }
-
-    public void setProduct_id(final String product_id) {
-        this.product_id = product_id;
     }
 
     public String getInstrument_id() {
@@ -55,13 +81,6 @@ public class MarginBorrowOrderDto {
         this.timestamp = timestamp;
     }
 
-    public String getCreated_at() {
-        return this.created_at;
-    }
-
-    public void setCreated_at(final String created_at) {
-        this.created_at = created_at;
-    }
 
     public String getLast_interest_time() {
         return this.last_interest_time;
@@ -87,13 +106,6 @@ public class MarginBorrowOrderDto {
         this.interest = interest;
     }
 
-    public String getRepay_amount() {
-        return this.repay_amount;
-    }
-
-    public void setRepay_amount(final String repay_amount) {
-        this.repay_amount = repay_amount;
-    }
 
     public String getReturned_amount() {
         return this.returned_amount;
@@ -103,13 +115,6 @@ public class MarginBorrowOrderDto {
         this.returned_amount = returned_amount;
     }
 
-    public String getRepay_interest() {
-        return this.repay_interest;
-    }
-
-    public void setRepay_interest(final String repay_interest) {
-        this.repay_interest = repay_interest;
-    }
 
     public String getPaid_interest() {
         return this.paid_interest;
@@ -118,4 +123,6 @@ public class MarginBorrowOrderDto {
     public void setPaid_interest(final String paid_interest) {
         this.paid_interest = paid_interest;
     }
+
+
 }

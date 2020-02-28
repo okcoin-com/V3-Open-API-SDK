@@ -39,23 +39,32 @@ namespace OKExSDK
         /// 钱包账户信息
         /// </summary>
         /// <returns>钱包列表</returns>
-        public async Task<JContainer> getWalletInfoAsync()
+        //public async Task<JContainer> getWalletInfoAsync()
+        //{
+        //    var url = $"{this.BASEURL}{this.ACCOUNT_SEGMENT}/wallet";
+        //    using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
+        //    {
+        //        var res = await client.GetAsync(url);
+        //        var contentStr = await res.Content.ReadAsStringAsync();
+        //        if (contentStr[0] == '[')
+        //        {
+        //            return JArray.Parse(contentStr);
+        //        }
+        //        return JObject.Parse(contentStr);
+        //    }
+        //}
+        public async Task<string> getWalletInfoAsync()
         {
             var url = $"{this.BASEURL}{this.ACCOUNT_SEGMENT}/wallet";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
             {
                 var res = await client.GetAsync(url);
                 var contentStr = await res.Content.ReadAsStringAsync();
-                if (contentStr[0] == '[')
-                {
-                    return JArray.Parse(contentStr);
-                }
-                return JObject.Parse(contentStr);
+                return contentStr;
             }
         }
-
         /// <summary>
-        /// 单一币种账户信息
+        /// 单一币种账户信息    
         /// </summary>
         /// <param name="currency">币种，如：btc</param>
         /// <returns></returns>
@@ -82,6 +91,9 @@ namespace OKExSDK
         public async Task<JObject> makeTransferAsync(Transfer transfer)
         {
             var url = $"{this.BASEURL}{this.ACCOUNT_SEGMENT}/transfer";
+            ////transfer.sub_account="";
+            //transfer.to_instrument_id = "";
+            //transfer.instrument_id = "";
             var bodyStr = JsonConvert.SerializeObject(transfer);
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, bodyStr)))
             {
@@ -183,7 +195,7 @@ namespace OKExSDK
         /// <param name="to">请求此页码之前的分页内容（举例页码为：1，2，3，4，5。from 4 只返回第5页，to 4只返回第3页）</param>
         /// <param name="limit">分页返回的结果集数量，默认为100，最大为100，按时间顺序排列，越早下单的在前面</param>
         /// <returns></returns>
-        public async Task<JContainer> getLedgerAsync(string currency, string type, int? from, int? to, int? limit)
+        public async Task<JContainer> getLedgerAsync(string currency, string type, int? after, int? before, int? limit)
         {
             var url = $"{this.BASEURL}{this.ACCOUNT_SEGMENT}/ledger";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
@@ -197,13 +209,13 @@ namespace OKExSDK
                 {
                     queryParams.Add("type", type);
                 }
-                if (from.HasValue)
+                if (after.HasValue)
                 {
-                    queryParams.Add("from", from.Value.ToString());
+                    queryParams.Add("after", after.Value.ToString());
                 }
-                if (to.HasValue)
+                if (before.HasValue)
                 {
-                    queryParams.Add("to", to.Value.ToString());
+                    queryParams.Add("before", before.Value.ToString());
                 }
                 if (limit.HasValue)
                 {
@@ -226,7 +238,7 @@ namespace OKExSDK
         /// </summary>
         /// <param name="currency">币种</param>
         /// <returns></returns>
-        public async Task<JContainer> getDepositAddressAsync(string currency)
+        public async Task<string> getDepositAddressAsync(string currency)
         {
             var url = $"{this.BASEURL}{this.ACCOUNT_SEGMENT}/deposit/address";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
@@ -240,11 +252,8 @@ namespace OKExSDK
                 var paramsStr = await encodedContent.ReadAsStringAsync();
                 var res = await client.GetAsync($"{url}?{paramsStr}");
                 var contentStr = await res.Content.ReadAsStringAsync();
-                if (contentStr[0] == '[')
-                {
-                    return JArray.Parse(contentStr);
-                }
-                return JObject.Parse(contentStr);
+              
+                return contentStr;
             }
         }
 
@@ -286,6 +295,26 @@ namespace OKExSDK
                 return JObject.Parse(contentStr);
             }
         }
-
+        public async Task<string> getsub_accountAsync(string sub_account)
+        {
+            var url = $"{this.BASEURL}{this.ACCOUNT_SEGMENT}/sub-account?sub-account={sub_account}";
+            using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
+            {
+                var res = await client.GetAsync(url);
+                var contentStr = await res.Content.ReadAsStringAsync();
+                return contentStr;
+            }
+        }
+        public async Task<string> getAsset_ValuationAsync()
+        {
+            var url = $"{this.BASEURL}{this.ACCOUNT_SEGMENT}/asset-valuation";
+            using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
+            {
+                var res = await client.GetAsync(url);
+                var contentStr = await res.Content.ReadAsStringAsync();
+                return contentStr;
+            }
+        }
+        
     }
 }

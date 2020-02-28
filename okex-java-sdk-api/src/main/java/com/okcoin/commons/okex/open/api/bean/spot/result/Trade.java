@@ -2,11 +2,11 @@ package com.okcoin.commons.okex.open.api.bean.spot.result;
 
 public class Trade {
     private String timestamp;
-    private Integer trade_id;
+    private String trade_id;
     private String price;
     private String size;
     private String side;
-    private String time;
+    //private String time;
 
     public String getTimestamp() {
         return this.timestamp;
@@ -16,11 +16,11 @@ public class Trade {
         this.timestamp = timestamp;
     }
 
-    public Integer getTrade_id() {
-        return this.trade_id;
+    public String getTrade_id() {
+        return trade_id;
     }
 
-    public void setTrade_id(final Integer trade_id) {
+    public void setTrade_id(String trade_id) {
         this.trade_id = trade_id;
     }
 
@@ -48,11 +48,11 @@ public class Trade {
         this.side = side;
     }
 
-    public String getTime() {
+    /*public String getTime() {
         return this.time;
     }
 
     public void setTime(final String time) {
         this.time = time;
-    }
+    }*/
 }

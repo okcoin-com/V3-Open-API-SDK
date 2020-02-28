@@ -18,13 +18,12 @@ public class FuturesAPIBaseTests extends BaseTests {
     public APIConfiguration config() {
         APIConfiguration config = new APIConfiguration();
 
-        config.setEndpoint("");
+        config.setEndpoint("https://www.okex.com/");
         config.setApiKey("");
         config.setSecretKey("");
-
         config.setPassphrase("");
         config.setPrint(true);
-        config.setI18n(I18nEnum.ENGLISH);
+        config.setI18n(I18nEnum.SIMPLIFIED_CHINESE);
         return config;
     }
 
@@ -35,9 +34,9 @@ public class FuturesAPIBaseTests extends BaseTests {
     int to = 0;
     int limit = 20;
 
-    String instrument_id = "EOS-USD-190628";
+    String instrument_id = "BTC-USD-191108";
     String currency = FuturesCurrenciesEnum.BTC.name();
     String direction = FuturesDirectionEnum.LONG.getDirection();
-    String leverage = "20";
+    String leverage = "22.22";
 
 }

@@ -3,27 +3,45 @@ package com.okcoin.commons.okex.open.api.bean.account.param;
 import java.math.BigDecimal;
 
 public class Withdraw {
-    private BigDecimal amount;
+    private String amount;
 
     private String currency;
 
-    private Integer destination;
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public String getFee() {
+        return fee;
+    }
+
+    public void setFee(String fee) {
+        this.fee = fee;
+    }
+
+    private String destination;
 
     private String to_address;
 
     private String trade_pwd;
 
-    private BigDecimal fee;
+    private String fee;
 
     private String tag;
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
 
     public String getCurrency() {
         return currency;
@@ -41,21 +59,7 @@ public class Withdraw {
         this.trade_pwd = trade_pwd;
     }
 
-    public BigDecimal getFee() {
-        return fee;
-    }
 
-    public void setFee(BigDecimal fee) {
-        this.fee = fee;
-    }
-
-    public Integer getDestination() {
-        return destination;
-    }
-
-    public void setDestination(Integer destination) {
-        this.destination = destination;
-    }
 
     public String getTo_address() {
         return to_address;

@@ -4,8 +4,8 @@ import java.util.List;
 
 public class PpOrders {
 
-    private String instrument_id = "";
-    private List<PpBatchOrder> order_data = null;
+    private String instrument_id ;
+    private List<PpBatchOrder> order_data ;
 
     public void setInstrument_id(String instrument_id) {
         this.instrument_id = instrument_id;

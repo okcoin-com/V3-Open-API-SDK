@@ -6,6 +6,16 @@ public class UserMarginBillDto {
     private String amount;
     private String balance;
     private String type;
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    private String currency;
     private UserMarginBillDto.Details details;
 
     public String getTimestamp() {

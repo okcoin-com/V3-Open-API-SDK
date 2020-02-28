@@ -19,18 +19,14 @@ namespace OKExSDK
         /// 获取币币杠杆账户资产列表
         /// </summary>
         /// <returns></returns>
-        public async Task<JContainer> getAccountsAsync()
+        public async Task<string> getAccountsAsync()
         {
             var url = $"{this.BASEURL}{this.MARGIN_SEGMENT}/accounts";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
             {
                 var res = await client.GetAsync(url);
                 var contentStr = await res.Content.ReadAsStringAsync();
-                if (contentStr[0] == '[')
-                {
-                    return JArray.Parse(contentStr);
-                }
-                return JObject.Parse(contentStr);
+                return contentStr;
             }
         }
 
@@ -39,14 +35,14 @@ namespace OKExSDK
         /// </summary>
         /// <param name="instrument_id">币对</param>
         /// <returns></returns>
-        public async Task<JObject> getAccountsByInstrumentIdAsync(string instrument_id)
+        public async Task<string> getAccountsByInstrumentIdAsync(string instrument_id)
         {
             var url = $"{this.BASEURL}{this.MARGIN_SEGMENT}/accounts/{instrument_id}";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
             {
                 var res = await client.GetAsync(url);
                 var contentStr = await res.Content.ReadAsStringAsync();
-                return JObject.Parse(contentStr);
+                return contentStr;
             }
         }
 
@@ -59,7 +55,7 @@ namespace OKExSDK
         /// <param name="to">请求此页码之前的分页内容（举例页码为：1，2，3，4，5。from 4 只返回第5页，to 4只返回第3页）</param>
         /// <param name="limit">分页返回的结果集数量，默认为100，最大为100，按时间顺序排列，越早下单的在前面</param>
         /// <returns></returns>
-        public async Task<JContainer> getLedgerAsync(string instrument_id, string type, int? from, int? to, int? limit)
+        public async Task<JContainer> getLedgerAsync(string instrument_id, string type, int? after, int? before, int? limit)
         {
             var url = $"{this.BASEURL}{this.MARGIN_SEGMENT}/accounts/{instrument_id}/ledger";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
@@ -69,13 +65,13 @@ namespace OKExSDK
                 {
                     queryParams.Add("type", type);
                 }
-                if (from.HasValue)
+                if (after.HasValue)
                 {
-                    queryParams.Add("from", from.Value.ToString());
+                    queryParams.Add("after", after.Value.ToString());
                 }
-                if (to.HasValue)
+                if (before.HasValue)
                 {
-                    queryParams.Add("to", to.Value.ToString());
+                    queryParams.Add("before", before.Value.ToString());
                 }
                 if (limit.HasValue)
                 {
@@ -97,18 +93,14 @@ namespace OKExSDK
         /// 杠杆配置信息
         /// </summary>
         /// <returns></returns>
-        public async Task<JContainer> getAvailabilityAsync()
+        public async Task<string> getAvailabilityAsync()
         {
             var url = $"{this.BASEURL}{this.MARGIN_SEGMENT}/accounts/availability";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
             {
                 var res = await client.GetAsync(url);
                 var contentStr = await res.Content.ReadAsStringAsync();
-                if (contentStr[0] == '[')
-                {
-                    return JArray.Parse(contentStr);
-                }
-                return JObject.Parse(contentStr);
+                return contentStr;
             }
         }
 
@@ -117,18 +109,14 @@ namespace OKExSDK
         /// </summary>
         /// <param name="instrument_id">币对</param>
         /// <returns></returns>
-        public async Task<JContainer> getAvailabilityByInstrumentId(string instrument_id)
+        public async Task<string> getAvailabilityByInstrumentId(string instrument_id)
         {
             var url = $"{this.BASEURL}{this.MARGIN_SEGMENT}/accounts/{instrument_id}/availability";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
             {
                 var res = await client.GetAsync(url);
                 var contentStr = await res.Content.ReadAsStringAsync();
-                if (contentStr[0] == '[')
-                {
-                    return JArray.Parse(contentStr);
-                }
-                return JObject.Parse(contentStr);
+                return contentStr;
             }
         }
 
@@ -140,7 +128,7 @@ namespace OKExSDK
         /// <param name="to">请求此页码之前的分页内容（举例页码为：1，2，3，4，5。from 4 只返回第5页，to 4只返回第3页）</param>
         /// <param name="limit">分页返回的结果集数量，默认为100，最大为100，按时间顺序排列，越早下单的在前面</param>
         /// <returns></returns>
-        public async Task<JContainer> getBorrowedAsync(string status, int? from, int? to, int? limit)
+        public async Task<string> getBorrowedAsync(string status, int? after, int? before, int? limit)
         {
             var url = $"{this.BASEURL}{this.MARGIN_SEGMENT}/accounts/borrowed";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
@@ -150,13 +138,13 @@ namespace OKExSDK
                 {
                     queryParams.Add("status", status);
                 }
-                if (from.HasValue)
+                if (after.HasValue)
                 {
-                    queryParams.Add("from", from.Value.ToString());
+                    queryParams.Add("after", after.Value.ToString());
                 }
-                if (to.HasValue)
+                if (before.HasValue)
                 {
-                    queryParams.Add("to", to.Value.ToString());
+                    queryParams.Add("before", before.Value.ToString());
                 }
                 if (limit.HasValue)
                 {
@@ -166,11 +154,7 @@ namespace OKExSDK
                 var paramsStr = await encodedContent.ReadAsStringAsync();
                 var res = await client.GetAsync($"{url}?{paramsStr}");
                 var contentStr = await res.Content.ReadAsStringAsync();
-                if (contentStr[0] == '[')
-                {
-                    return JArray.Parse(contentStr);
-                }
-                return JObject.Parse(contentStr);
+                return contentStr;
             }
         }
 
@@ -183,7 +167,7 @@ namespace OKExSDK
         /// <param name="to">请求此页码之前的分页内容（举例页码为：1，2，3，4，5。from 4 只返回第5页，to 4只返回第3页）</param>
         /// <param name="limit">分页返回的结果集数量，默认为100，最大为100，按时间顺序排列，越早下单的在前面</param>
         /// <returns></returns>
-        public async Task<JContainer> getBorrowedByInstrumentIdAsync(string instrument_id, string status, int? from, int? to, int? limit)
+        public async Task<JContainer> getBorrowedByInstrumentIdAsync(string instrument_id, string status, int? after, int? before, int? limit)
         {
             var url = $"{this.BASEURL}{this.MARGIN_SEGMENT}/accounts/{instrument_id}/borrowed";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
@@ -193,13 +177,13 @@ namespace OKExSDK
                 {
                     queryParams.Add("status", status);
                 }
-                if (from.HasValue)
+                if (after.HasValue)
                 {
-                    queryParams.Add("from", from.Value.ToString());
+                    queryParams.Add("after", after.Value.ToString());
                 }
-                if (to.HasValue)
+                if (before.HasValue)
                 {
-                    queryParams.Add("to", to.Value.ToString());
+                    queryParams.Add("before", before.Value.ToString());
                 }
                 if (limit.HasValue)
                 {
@@ -274,7 +258,7 @@ namespace OKExSDK
         /// <typeparam name="T">订单类型：市价：MarginOrderMarket 限价：MarginOrderLimit</typeparam>
         /// <param name="order">订单信息</param>
         /// <returns></returns>
-        public async Task<JObject> makeOrderAsync<T>(T order)
+        public async Task<string> makeOrderAsync<T>(T order)
         {
             var url = $"{this.BASEURL}{this.MARGIN_SEGMENT}/orders";
             var bodyStr = JsonConvert.SerializeObject(order);
@@ -282,7 +266,7 @@ namespace OKExSDK
             {
                 var res = await client.PostAsync(url, new StringContent(bodyStr, Encoding.UTF8, "application/json"));
                 var contentStr = await res.Content.ReadAsStringAsync();
-                return JObject.Parse(contentStr);
+                return contentStr;
             }
         }
         /// <summary>
@@ -291,7 +275,7 @@ namespace OKExSDK
         /// <typeparam name="T">订单类型：市价：List<MarginOrderMarket> 限价：List<MarginOrderLimit></typeparam>
         /// <param name="orders">订单列表</param>
         /// <returns></returns>
-        public async Task<JContainer> makeOrderBatchAsync<T>(List<T> orders)
+        public async Task<string> makeOrderBatchAsync<T>(List<T> orders)
         {
             var url = $"{this.BASEURL}{this.MARGIN_SEGMENT}/batch_orders";
             var bodyStr = JsonConvert.SerializeObject(orders);
@@ -299,11 +283,7 @@ namespace OKExSDK
             {
                 var res = await client.PostAsync(url, new StringContent(bodyStr, Encoding.UTF8, "application/json"));
                 var contentStr = await res.Content.ReadAsStringAsync();
-                if (contentStr[0] == '[')
-                {
-                    return JArray.Parse(contentStr);
-                }
-                return JObject.Parse(contentStr);
+                return contentStr;
             }
         }
 
@@ -361,21 +341,21 @@ namespace OKExSDK
         /// <param name="to">请求此id之前(更旧的数据)的分页内容</param>
         /// <param name="limit">分页返回的结果集数量，默认为100，最大为100</param>
         /// <returns></returns>
-        public async Task<JContainer> getOrdersAsync(string instrument_id, string status, int? from, int? to, int? limit)
+        public async Task<JContainer> getOrdersAsync(string instrument_id, string state, int? after, int? before, int? limit)
         {
             var url = $"{this.BASEURL}{this.MARGIN_SEGMENT}/orders";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
             {
                 var queryParams = new Dictionary<string, string>();
                 queryParams.Add("instrument_id", instrument_id);
-                queryParams.Add("status", status);
-                if (from.HasValue)
+                queryParams.Add("state", state);
+                if (after.HasValue)
                 {
-                    queryParams.Add("from", from.Value.ToString());
+                    queryParams.Add("after", after.Value.ToString());
                 }
-                if (to.HasValue)
+                if (before.HasValue)
                 {
-                    queryParams.Add("to", to.Value.ToString());
+                    queryParams.Add("before", before.Value.ToString());
                 }
                 if (limit.HasValue)
                 {
@@ -423,7 +403,7 @@ namespace OKExSDK
         /// <param name="to">请求此id之前(更旧的数据)的分页内容</param>
         /// <param name="limit">分页返回的结果集数量，默认为100，最大为100</param>
         /// <returns></returns>
-        public async Task<JContainer> getPendingOrdersAsync(string instrument_id, int? from, int? to, int? limit)
+        public async Task<string> getPendingOrdersAsync(string instrument_id, int? after, int? before, int? limit)
         {
             var url = $"{this.BASEURL}{this.MARGIN_SEGMENT}/orders_pending";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
@@ -431,13 +411,13 @@ namespace OKExSDK
                 var queryParams = new Dictionary<string, string>();
                 queryParams.Add("instrument_id", instrument_id);
 
-                if (from.HasValue)
+                if (after.HasValue)
                 {
-                    queryParams.Add("from", from.Value.ToString());
+                    queryParams.Add("after", after.Value.ToString());
                 }
-                if (to.HasValue)
+                if (before.HasValue)
                 {
-                    queryParams.Add("to", to.Value.ToString());
+                    queryParams.Add("before", before.Value.ToString());
                 }
                 if (limit.HasValue)
                 {
@@ -447,14 +427,25 @@ namespace OKExSDK
                 var paramsStr = await encodedContent.ReadAsStringAsync();
                 var res = await client.GetAsync($"{url}?{paramsStr}");
                 var contentStr = await res.Content.ReadAsStringAsync();
-                if (contentStr[0] == '[')
-                {
-                    return JArray.Parse(contentStr);
-                }
-                return JObject.Parse(contentStr);
+
+                return contentStr;
             }
         }
+        public async Task<string> btnGetOrders(string instrument_id, string orderid)
+        {
+            var url = $"{this.BASEURL}{this.MARGIN_SEGMENT}/orders/{orderid}";
+            using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
+            {
+                var queryParams = new Dictionary<string, string>();
+                queryParams.Add("instrument_id", instrument_id);
+                var encodedContent = new FormUrlEncodedContent(queryParams);
+                var paramsStr = await encodedContent.ReadAsStringAsync();
+                var res = await client.GetAsync($"{url}?{paramsStr}");
+                var contentStr = await res.Content.ReadAsStringAsync();
 
+                return contentStr;
+            }
+        }
         /// <summary>
         /// 获取成交明细
         /// </summary>
@@ -493,6 +484,36 @@ namespace OKExSDK
                     return JArray.Parse(contentStr);
                 }
                 return JObject.Parse(contentStr);
+            }
+        }
+        public async Task<string> getLeverage(string instrument_id)
+        {
+            var url = $"{this.BASEURL}{this.MARGIN_SEGMENT}/accounts/{instrument_id}/leverage";
+            using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
+            {
+                var res = await client.GetAsync(url);
+                var contentStr = await res.Content.ReadAsStringAsync();
+                return contentStr;
+            }
+        }
+        public async Task<string> SetLeverage(string instument_id,string bodystr)
+        {
+            var url = $"{this.BASEURL}{this.MARGIN_SEGMENT}/accounts/{instument_id}/leverage";
+            using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, bodystr)))
+            {
+                var res = await client.PostAsync(url, new StringContent(bodystr, Encoding.UTF8, "application/json"));
+                var contentStr = await res.Content.ReadAsStringAsync();
+                return contentStr;
+            }
+        }
+        public async Task<string> mark_price(string instrument_id)
+        {
+            var url = $"{this.BASEURL}{this.MARGIN_SEGMENT}/instruments/{instrument_id}/mark_price";
+            using(var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
+            {
+                var res = await client.GetAsync(url);
+                var content = await res.Content.ReadAsStringAsync();
+                return content;
             }
         }
     }

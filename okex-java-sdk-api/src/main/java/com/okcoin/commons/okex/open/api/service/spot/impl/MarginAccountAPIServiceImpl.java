@@ -1,5 +1,7 @@
 package com.okcoin.commons.okex.open.api.service.spot.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.okcoin.commons.okex.open.api.bean.spot.param.MarginLeverage;
 import com.okcoin.commons.okex.open.api.bean.spot.result.*;
 import com.okcoin.commons.okex.open.api.client.APIClient;
 import com.okcoin.commons.okex.open.api.config.APIConfiguration;
@@ -28,13 +30,13 @@ public class MarginAccountAPIServiceImpl implements MarginAccountAPIService {
     }
 
     @Override
-    public Map<String, Object> getAccountsByProductId(final String product) {
-        return this.client.executeSync(this.api.getAccountsByProductId(product));
+    public Map<String, Object> getAccountsByProductId(final String instrument_id) {
+        return this.client.executeSync(this.api.getAccountsByProductId(instrument_id));
     }
 
     @Override
-    public List<UserMarginBillDto> getLedger(final String product, final String type, final String from, final String to, final String limit) {
-        return this.client.executeSync(this.api.getLedger(product, type, from, to, limit));
+    public List<UserMarginBillDto> getLedger(final String instrument_id, final String type, final String before, final String after, final String limit) {
+        return this.client.executeSync(this.api.getLedger(instrument_id, type, before, after, limit));
     }
 
     @Override
@@ -43,18 +45,18 @@ public class MarginAccountAPIServiceImpl implements MarginAccountAPIService {
     }
 
     @Override
-    public List<Map<String, Object>> getAvailabilityByProductId(final String product) {
-        return this.client.executeSync(this.api.getAvailabilityByProductId(product));
+    public List<Map<String, Object>> getAvailabilityByProductId(final String instrument_id) {
+        return this.client.executeSync(this.api.getAvailabilityByProductId(instrument_id));
     }
 
     @Override
-    public List<MarginBorrowOrderDto> getBorrowedAccounts(final String status, final String from, final String to, final String limit) {
-        return this.client.executeSync(this.api.getBorrowedAccounts(status, from, to, limit));
+    public List<MarginBorrowOrderDto> getBorrowedAccounts(final String status, final String before, final String after, final String limit) {
+        return this.client.executeSync(this.api.getBorrowedAccounts(status, before, after, limit));
     }
 
     @Override
-    public List<MarginBorrowOrderDto> getBorrowedAccountsByProductId(final String product, final String from, final String to, final String limit, final String status) {
-        return this.client.executeSync(this.api.getBorrowedAccountsByProductId(product, from, to, limit, status));
+    public List<MarginBorrowOrderDto> getBorrowedAccountsByProductId(final String instrument_id,final String before, final String after, final String limit, final String status) {
+        return this.client.executeSync(this.api.getBorrowedAccountsByProductId(instrument_id,before, after, limit, status));
     }
 
     @Override
@@ -65,5 +67,15 @@ public class MarginAccountAPIServiceImpl implements MarginAccountAPIService {
     @Override
     public RepaymentResult repayment_1(final RepaymentRequestDto order) {
         return this.client.executeSync(this.api.repayment_1(order));
+    }
+
+    @Override
+    public JSONObject setLeverage(String instrument_id, MarginLeverage leverage) {
+        return this.client.executeSync(this.api.setLeverage(instrument_id,leverage));
+    }
+
+    @Override
+    public JSONObject getLeverage(String leverage) {
+        return this.client.executeSync(this.api.getLeverage(leverage));
     }
 }

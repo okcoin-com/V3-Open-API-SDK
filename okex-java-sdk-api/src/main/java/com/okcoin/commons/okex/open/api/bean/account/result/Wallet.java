@@ -1,16 +1,11 @@
 package com.okcoin.commons.okex.open.api.bean.account.result;
 
-import java.math.BigDecimal;
-
 public class Wallet {
 
     private String currency;
-
-    private BigDecimal balance;
-
-    private BigDecimal frozen;
-
-    private BigDecimal available;
+    private String balance;
+    private String hold;
+    private String available;
 
     public String getCurrency() {
         return currency;
@@ -20,27 +15,28 @@ public class Wallet {
         this.currency = currency;
     }
 
-    public BigDecimal getBalance() {
+    public String getBalance() {
         return balance;
     }
 
-    public void setBalance(BigDecimal balance) {
+    public void setBalance(String balance) {
         this.balance = balance;
     }
 
-    public BigDecimal getFrozen() {
-        return frozen;
+
+    public String getHold() {
+        return hold;
     }
 
-    public void setFrozen(BigDecimal frozen) {
-        this.frozen = frozen;
+    public void setHold(String hold) {
+        this.hold = hold;
     }
 
-    public BigDecimal getAvailable() {
+    public String getAvailable() {
         return available;
     }
 
-    public void setAvailable(BigDecimal available) {
+    public void setAvailable(String available) {
         this.available = available;
     }
 }

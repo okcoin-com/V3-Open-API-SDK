@@ -26,6 +26,18 @@ public class AccountAPIServiceImpl implements AccountAPIService {
         this.api = client.createService(AccountAPI.class);
     }
 
+
+    @Override
+    public List<Wallet> getWallet() {
+        return this.client.executeSync(this.api.getWallet());
+    }
+
+    @Override
+    public List<Wallet> getWallet(String currency) {
+        return this.client.executeSync(this.api.getWallet(currency));
+    }
+
+
     @Override
     public JSONObject transfer(Transfer transfer) {
         return this.client.executeSync(this.api.transfer(JSONObject.parseObject(JSON.toJSONString(transfer))));
@@ -41,19 +53,10 @@ public class AccountAPIServiceImpl implements AccountAPIService {
         return this.client.executeSync(this.api.getCurrencies());
     }
 
+    //String currency,
     @Override
-    public List<Ledger> getLedger(Integer type, String currency, Integer before, Integer after, int limit) {
+    public JSONArray getLedger(String type, String currency,  String before, String after, String limit) {
         return this.client.executeSync(this.api.getLedger(type, currency, before, after, limit));
-    }
-
-    @Override
-    public List<Wallet> getWallet() {
-        return this.client.executeSync(this.api.getWallet());
-    }
-
-    @Override
-    public List<Wallet> getWallet(String currency) {
-        return this.client.executeSync(this.api.getWallet(currency));
     }
 
     @Override
@@ -95,5 +98,25 @@ public class AccountAPIServiceImpl implements AccountAPIService {
     @Override
     public JSONArray getDepositHistory(String currency) {
         return this.client.executeSync(this.api.getDepositHistory(currency));
+    }
+   //查询所有提币记录
+    @Override
+    public JSONArray getWithdrawalHistory() {
+        return this.client.executeSync(this.api.getWithdrawalHistory());
+    }
+    //查询单个提币记录
+    @Override
+    public JSONArray getWithdrawalHistory(String currency) {
+        return this.client.executeSync(this.api.getWithdrawalHistory(currency));
+    }
+
+    @Override
+    public JSONObject getSubAccount(String sub_account) {
+        return this.client.executeSync(this.api.getSubAccount(sub_account));
+    }
+
+    @Override
+    public JSONObject getAllAccount(String account_type, String valuation_currency) {
+        return this.client.executeSync(this.api.getAllAccount(account_type,valuation_currency));
     }
 }

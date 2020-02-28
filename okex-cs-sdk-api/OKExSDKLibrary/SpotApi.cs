@@ -19,7 +19,7 @@ namespace OKExSDK
         /// 获取币币账户信息
         /// </summary>
         /// <returns></returns>
-        public async Task<JContainer> getSpotAccountsAsync()
+        public async Task<string> getSpotAccountsAsync()
         {
             var url = $"{this.BASEURL}{this.SPOT_SEGMENT}/accounts";
 
@@ -28,11 +28,7 @@ namespace OKExSDK
                 var res = await client.GetAsync(url);
 
                 var contentStr = await res.Content.ReadAsStringAsync();
-                if (contentStr[0] == '[')
-                {
-                    return JArray.Parse(contentStr);
-                }
-                return JObject.Parse(contentStr);
+                return contentStr;
             }
         }
 
@@ -41,7 +37,7 @@ namespace OKExSDK
         /// </summary>
         /// <param name="currency">币种</param>
         /// <returns></returns>
-        public async Task<JObject> getAccountByCurrencyAsync(string currency)
+        public async Task<string> getAccountByCurrencyAsync(string currency)
         {
             var url = $"{this.BASEURL}{this.SPOT_SEGMENT}/accounts/{currency}";
 
@@ -50,7 +46,7 @@ namespace OKExSDK
                 var res = await client.GetAsync(url);
 
                 var contentStr = await res.Content.ReadAsStringAsync();
-                return JObject.Parse(contentStr);
+                return contentStr;
             }
         }
 
@@ -62,23 +58,27 @@ namespace OKExSDK
         /// <param name="to">请求此页码之前的分页内容（举例页码为：1，2，3，4，5。from 4 只返回第5页，to 4只返回第3页）</param>
         /// <param name="limit">分页返回的结果集数量，默认为100，最大为100</param>
         /// <returns></returns>
-        public async Task<JContainer> getSpotLedgerByCurrencyAsync(string currency, int? from, int? to, int? limit)
+        public async Task<JContainer> getSpotLedgerByCurrencyAsync(string currency, int? after, int? before, int? limit, int? type)
         {
             var url = $"{this.BASEURL}{this.SPOT_SEGMENT}/accounts/{currency}/ledger";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
             {
                 var queryParams = new Dictionary<string, string>();
-                if (from.HasValue)
+                if (after.HasValue)
                 {
-                    queryParams.Add("from", from.Value.ToString());
+                    queryParams.Add("after", after.Value.ToString());
                 }
-                if (to.HasValue)
+                if (before.HasValue)
                 {
-                    queryParams.Add("to", to.Value.ToString());
+                    queryParams.Add("before", before.Value.ToString());
                 }
                 if (limit.HasValue)
                 {
                     queryParams.Add("limit", limit.Value.ToString());
+                }
+                if (type.HasValue)
+                {
+                    queryParams.Add("type", type.Value.ToString());
                 }
                 var encodedContent = new FormUrlEncodedContent(queryParams);
                 var paramsStr = await encodedContent.ReadAsStringAsync();
@@ -97,7 +97,7 @@ namespace OKExSDK
         /// </summary>
         /// <typeparam name="T">订单类型：市价：SpotOrderMarket 限价：SpotOrderLimit</typeparam>
         /// <param name="order">订单信息</param>
-        /// <returns></returns>
+        /// <returns></returns> 
         public async Task<JObject> makeOrderAsync<T>(T order)
         {
             var url = $"{this.BASEURL}{this.SPOT_SEGMENT}/orders";
@@ -185,21 +185,21 @@ namespace OKExSDK
         /// <param name="to">请求此id之前(更旧的数据)的分页内容</param>
         /// <param name="limit">分页返回的结果集数量，默认为100，最大为100</param>
         /// <returns></returns>
-        public async Task<JContainer> getOrdersAsync(string instrument_id, string status, int? from, int? to, int? limit)
+        public async Task<JContainer> getOrdersAsync(string instrument_id, string state, int? after, int? before, int? limit)
         {
             var url = $"{this.BASEURL}{this.SPOT_SEGMENT}/orders";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
             {
                 var queryParams = new Dictionary<string, string>();
                 queryParams.Add("instrument_id", instrument_id);
-                queryParams.Add("status", status);
-                if (from.HasValue)
+                queryParams.Add("state", state);
+                if (after.HasValue)
                 {
-                    queryParams.Add("from", from.Value.ToString());
+                    queryParams.Add("after", after.Value.ToString());
                 }
-                if (to.HasValue)
+                if (before.HasValue)
                 {
-                    queryParams.Add("to", to.Value.ToString());
+                    queryParams.Add("before", before.Value.ToString());
                 }
                 if (limit.HasValue)
                 {
@@ -225,7 +225,7 @@ namespace OKExSDK
         /// <param name="to">请求此id之前(更旧的数据)的分页内容</param>
         /// <param name="limit">分页返回的结果集数量，默认为100，最大为100</param>
         /// <returns></returns>
-        public async Task<JContainer> getPendingOrdersAsync(string instrument_id, int? from, int? to, int? limit)
+        public async Task<JContainer> getPendingOrdersAsync(string instrument_id, int? after, int? before, int? limit)
         {
             var url = $"{this.BASEURL}{this.SPOT_SEGMENT}/orders_pending";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
@@ -233,13 +233,13 @@ namespace OKExSDK
                 var queryParams = new Dictionary<string, string>();
                 queryParams.Add("instrument_id", instrument_id);
 
-                if (from.HasValue)
+                if (after.HasValue)
                 {
-                    queryParams.Add("from", from.Value.ToString());
+                    queryParams.Add("after", after.Value.ToString());
                 }
-                if (to.HasValue)
+                if (before.HasValue)
                 {
-                    queryParams.Add("to", to.Value.ToString());
+                    queryParams.Add("before", before.Value.ToString());
                 }
                 if (limit.HasValue)
                 {
@@ -288,7 +288,7 @@ namespace OKExSDK
         /// <param name="to">请求此页码之前的分页内容（举例页码为：1，2，3，4，5。from 4 只返回第5页，to 4只返回第3页）</param>
         /// <param name="limit">分页返回的结果集数量，默认为100，最大为100，按时间顺序排列，越早下单的在前面</param>
         /// <returns></returns>
-        public async Task<JContainer> getFillsAsync(long order_id, string instrument_id, int? from, int? to, int? limit)
+        public async Task<string> getFillsAsync(long order_id, string instrument_id, int? from, int? to, int? limit)
         {
             var url = $"{this.BASEURL}{this.SPOT_SEGMENT}/fills";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
@@ -312,11 +312,7 @@ namespace OKExSDK
                 var paramsStr = await encodedContent.ReadAsStringAsync();
                 var res = await client.GetAsync($"{url}?{paramsStr}");
                 var contentStr = await res.Content.ReadAsStringAsync();
-                if (contentStr[0] == '[')
-                {
-                    return JArray.Parse(contentStr);
-                }
-                return JObject.Parse(contentStr);
+                return contentStr;
             }
         }
 
@@ -416,19 +412,19 @@ namespace OKExSDK
         /// <param name="to">请求此id之前(更旧的数据)的分页内容</param>
         /// <param name="limit">分页返回的结果集数量，默认为100，最大为100</param>
         /// <returns></returns>
-        public async Task<JContainer> getTradesAasync(string instrument_id, int? from, int? to, int? limit)
+        public async Task<JContainer> getTradesAasync(string instrument_id, int? after, int? before, int? limit)
         {
             var url = $"{this.BASEURL}{this.SPOT_SEGMENT}/instruments/{instrument_id}/trades";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
             {
                 var queryParams = new Dictionary<string, string>();
-                if (from.HasValue)
+                if (after.HasValue)
                 {
-                    queryParams.Add("from", from.Value.ToString());
+                    queryParams.Add("after", after.Value.ToString());
                 }
-                if (to.HasValue)
+                if (before.HasValue)
                 {
-                    queryParams.Add("to", to.Value.ToString());
+                    queryParams.Add("before", before.Value.ToString());
                 }
                 if (limit.HasValue)
                 {
@@ -454,7 +450,7 @@ namespace OKExSDK
         /// <param name="end">结束时间</param>
         /// <param name="granularity">时间粒度，以秒为单位，必须为60的倍数</param>
         /// <returns></returns>
-        public async Task<JContainer> getCandlesAsync(string instrument_id, DateTime? start, DateTime? end, int? granularity)
+        public async Task<string> getCandlesAsync(string instrument_id, DateTime? start, DateTime? end, int? granularity)
         {
             var url = $"{this.BASEURL}{this.SPOT_SEGMENT}/instruments/{instrument_id}/candles";
             using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
@@ -476,11 +472,96 @@ namespace OKExSDK
                 var paramsStr = await encodedContent.ReadAsStringAsync();
                 var res = await client.GetAsync($"{url}?{paramsStr}");
                 var contentStr = await res.Content.ReadAsStringAsync();
-                if (contentStr[0] == '[')
+
+                return contentStr;
+            }
+        }
+        public async Task<string> getOrder_algoAsync(string instrument_id, int order_type, int? status, int? algo_id, int? before, int? after, int? limit)
+        {
+            var url = $"{ this.BASEURL}{this.SPOT_SEGMENT}/order_algo/{instrument_id}";
+
+            using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
+            {
+                var queryParams = new Dictionary<string, string>();
+                queryParams.Add("order_type", order_type.ToString());
+                if (status.HasValue)
                 {
-                    return JArray.Parse(contentStr);
+                    queryParams.Add("status", status.Value.ToString());
                 }
-                return JObject.Parse(contentStr);
+                if (algo_id.HasValue)
+                {
+                    queryParams.Add("algo_id", algo_id.Value.ToString());
+                }
+                if (before.HasValue)
+                {
+                    queryParams.Add("before", before.Value.ToString());
+                }
+                if (after.HasValue)
+                {
+                    queryParams.Add("after", after.Value.ToString());
+                }
+                if (limit.HasValue)
+                {
+                    queryParams.Add("limit", limit.Value.ToString());
+                }
+                var encodedContent = new FormUrlEncodedContent(queryParams);
+                var paramsStr = await encodedContent.ReadAsStringAsync();
+                var res = await client.GetAsync($"{ url}?{paramsStr}");
+                var contentStr = await res.Content.ReadAsStringAsync();
+                return contentStr;
+            }
+        }
+
+        public async Task<string> btnOrder_algoSpot(string instrument_id, string mode, string order_type, string size, string side, string trigger_price, string algo_price)
+        {
+            //  止盈止损参数
+            //trigger_price    触发价格，填写值0\< X\<= 1000000
+            //algo_price String  是 委托价格，填写值0\< X\<= 1000000
+            //跟踪委托参数
+            //callback_rate   String 是   回调幅度，填写值0.001（0.1 %）\<= X\<= 0.05（5 %）
+            //trigger_price String  是 激活价格 ，填写值0\< X\<= 1000000
+            //冰山委托参数 （最多同时存在6单）
+            //algo_variance String  是 委托深度，填写值0.0001(0.01 %)\<= X\<= 0.01（1 %）
+            //avg_amount String  是 单笔均值，填写2 - 1000的整数（永续2 - 500的整数）
+            //limit_price String  是 价格限制 ，填写值0\< X\<= 1000000
+            //时间加权参数 （最多同时存在6单）
+            //sweep_range String  是 扫单范围，填写值0.005（0.5 %）\<= X\<= 0.01（1 %）
+            //sweep_ratio String  是 扫单比例，填写值 0.01\<= X\<= 1
+            //single_limit String  是 单笔上限，填写值10\<= X\<= 2000（永续2 - 500的整数）
+            //limit_price String  是 价格限制，填写值0\< X\<= 1000000
+            //time_interval Strin
+            var url = $"{this.BASEURL}{this.SPOT_SEGMENT}/order_algo";
+            var body = new { instrument_id = instrument_id, mode = mode, side = side, order_type = order_type, size = size, trigger_price = trigger_price, algo_price = algo_price };
+            var bodyStr = JsonConvert.SerializeObject(body);
+            using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, bodyStr)))
+            {
+                var res = await client.PostAsync(url, new StringContent(bodyStr, Encoding.UTF8, "application/json"));
+                var contentStr = await res.Content.ReadAsStringAsync();
+                return contentStr;
+            }
+        }
+
+        public async Task<string> cancel_batch_algosSpot(string instrument_id, string algo_ids, string order_type)
+        {
+
+            var url = $"{this.BASEURL}{this.SPOT_SEGMENT}/cancel_batch_algos";
+            var body = new { instrument_id = instrument_id, algo_ids = algo_ids, order_type = order_type };
+            var bodyStr = JsonConvert.SerializeObject(body).Replace("\"[", "[").Replace("]\"", "]").Replace("\\\"", "\"");
+            using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, bodyStr)))
+            {
+                var res = await client.PostAsync(url, new StringContent(bodyStr, Encoding.UTF8, "application/json"));
+                var contentStr = await res.Content.ReadAsStringAsync();
+                return contentStr;
+            }
+        }
+        public async Task<string> getTrade_fee()
+        {
+            string url = $"{this.BASEURL}{this.SPOT_SEGMENT}/trade_fee";
+            using (HttpClient client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
+            {
+                var res = await client.GetAsync(url);
+                string content =await  res.Content.ReadAsStringAsync();
+                return content;
             }
         }
     }

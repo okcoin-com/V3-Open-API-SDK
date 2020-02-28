@@ -2,10 +2,35 @@ package com.okcoin.commons.okex.open.api.bean.spot.result;
 
 public class OrderInfo {
 
+    public String getOrder_id() {
+        return order_id;
+    }
+
+    public void setOrder_id(String order_id) {
+        this.order_id = order_id;
+    }
+
+    public String getClient_oid() {
+        return client_oid;
+    }
+
+    public void setClient_oid(String client_oid) {
+        this.client_oid = client_oid;
+    }
+
+    public String getOrder_type() {
+        return order_type;
+    }
+
+    public void setOrder_type(String order_type) {
+        this.order_type = order_type;
+    }
+
     /**
      * 订单id
      */
-    private Long order_id;
+    private String order_id;
+    private String client_oid;
     /**
      * limit 订单类型的价格信息
      */
@@ -21,7 +46,8 @@ public class OrderInfo {
     /**
      * 平均成交价
      */
-    //private String avg_price;
+    private String price_avg;
+    private String order_type;
     /**
      * 委托时间
      */
@@ -33,7 +59,9 @@ public class OrderInfo {
     /**
      * 订单状态 -1 已撤销 0 未成交
      */
-    private String status;
+    //private String status;
+
+    private String state;
     /**
      * 订单买卖类型 buy/sell
      */
@@ -52,13 +80,7 @@ public class OrderInfo {
      */
     private String filled_notional;
 
-    public Long getOrder_id() {
-        return this.order_id;
-    }
 
-    public void setOrder_id(final Long order_id) {
-        this.order_id = order_id;
-    }
 
     public String getPrice() {
         return this.price;
@@ -103,14 +125,20 @@ public class OrderInfo {
         this.filled_size = filled_size;
     }
 
-    public String getStatus() {
+
+    public void setState(final String state) {
+        this.state = state;
+    }
+    public String getState() {
+        return this.state;
+    }
+
+    /*public String getStatus() {
         return this.status;
     }
-
     public void setStatus(final String status) {
         this.status = status;
-    }
-
+    }*/
     public String getSide() {
         return this.side;
     }
@@ -145,5 +173,13 @@ public class OrderInfo {
 
     public void setFilled_notional(final String filled_notional) {
         this.filled_notional = filled_notional;
+    }
+
+    public String getPrice_avg() {
+        return price_avg;
+    }
+
+    public void setPrice_avg(String price_avg) {
+        this.price_avg = price_avg;
     }
 }

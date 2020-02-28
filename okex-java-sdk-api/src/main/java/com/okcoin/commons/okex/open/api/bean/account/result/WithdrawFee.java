@@ -34,4 +34,13 @@ public class WithdrawFee {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
+
+    @Override
+    public String toString() {
+        return "WithdrawFee{" +
+                "min_fee=" + min_fee +
+                ", max_fee=" + max_fee +
+                ", currency='" + currency + '\'' +
+                '}';
+    }
 }

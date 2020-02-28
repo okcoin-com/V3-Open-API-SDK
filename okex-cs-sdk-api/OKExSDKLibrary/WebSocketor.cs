@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Ionic.Crc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -19,6 +20,12 @@ namespace OKExSDK
         CancellationTokenSource cts = new CancellationTokenSource();
         public event WebSocketPushHandler WebSocketPush;
         public delegate void WebSocketPushHandler(string message);
+        public string asks_start = "asks\":[[";
+        public string asks_end = "]],\"bids";
+        public string bids_start = "bids\":[[";
+        public string bids_end = "]],\"timestamp";
+        public static SortedDictionary<double, string[]> baseAsks = new SortedDictionary<double, string[]>();
+        public static SortedDictionary<double, string[]> baseBids = new SortedDictionary<double, string[]>();
         private bool isLogin = false;
         private string apiKey;
         private string secret;
@@ -41,7 +48,10 @@ namespace OKExSDK
                 await rebootAsync();
             };
         }
-
+        public void test()
+        {
+            receive();
+        }
         public async Task ConnectAsync()
         {
             await ws.ConnectAsync(new Uri(url), cts.Token);
@@ -160,14 +170,79 @@ namespace OKExSDK
             Task.Factory.StartNew(
               async () =>
               {
+                  byte[] buffer = new byte[102400];
+                  byte[] buffer_part = new byte[81920];
+                  int length = 0;
                   while (ws.State == WebSocketState.Open)
                   {
-                      byte[] buffer = new byte[1024];
-                      var result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                      var result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer_part), CancellationToken.None);
                       if (result.MessageType == WebSocketMessageType.Binary)
                       {
                           closeCheckTimer.Interval = 31000;
-                          var resultStr = Decompress(buffer);
+                          string resultStr = "";
+                          if (result.EndOfMessage)
+                          {
+                              if (length == 0)
+                              {
+                                  resultStr = Decompress(buffer_part);
+                              }
+                              else
+                              {
+                                  Array.Copy(buffer_part, 0, buffer, length, result.Count);
+                                  resultStr = Decompress(buffer);
+                                  length = 0;
+                              }
+                          }
+                          else
+                          {
+                              try
+                              {
+                                  Array.Copy(buffer_part, buffer, result.Count);
+                                  length += result.Count;
+                              }
+                              catch (Exception ex)
+                              {
+                                  Console.WriteLine(ex.Message);
+                              }
+
+                          }
+                          //If is depth
+                          try
+                          {
+                              if (resultStr.IndexOf("event") < 0 && !(resultStr.IndexOf("depth5") > 0)&& resultStr.IndexOf("depth") > 0)
+                              {
+                                  int index_asksStart = resultStr.IndexOf(asks_start);
+                                  int index_asksEnd = resultStr.IndexOf(asks_end);
+                                  int index_bidsStart = resultStr.IndexOf(bids_start);
+                                  int index_bidsEnd = resultStr.IndexOf(bids_end);
+                                  string beforeAsks = "", asks = "", bids = "", afterBids = "";
+                                  if (index_asksStart > 0)
+                                  {
+                                      beforeAsks = resultStr.Substring(0, index_asksStart + 8);
+                                      asks = resultStr.Substring(index_asksStart + 8, index_asksEnd - (index_asksStart + 8));
+                                  }
+                                  if (index_bidsStart > 0 && index_bidsEnd > 0)
+                                  {
+                                      bids = resultStr.Substring(index_bidsStart + 8, index_bidsEnd - index_bidsStart - 8);
+                                      afterBids = resultStr.Substring(index_bidsEnd);
+                                  }
+                                  List<string> list_askContents = asks.Split(new[] { "],[" }, StringSplitOptions.None).ToList();
+                                  List<string> list_bidContents = bids.Split(new[] { "],[" }, StringSplitOptions.None).ToList();
+                                  combineIncrementalData(list_askContents, "asks");
+                                  combineIncrementalData(list_bidContents, "bids");
+                                  if (list_askContents.Count != 200 && (!list_askContents.Contains("partial")))
+                                  {
+                                      var obj = buildStr_checksum_asks_bids();
+                                      int crc32 = getCRC32(obj.Item1);
+                                      resultStr = "增量数据：" + resultStr + "\n" + "checksum值：" + crc32.ToString() + "\n" + "合并后的" + beforeAsks + obj.Item2 + "],\"bids\":[" + obj.Item3 + afterBids + "\n\n";
+                                  }
+                              }
+                          }
+                          catch (Exception e)
+                          {
+                              resultStr = e.Message + e.StackTrace;
+                          }
+
                           WebSocketPush.Invoke(resultStr);
                           continue;
                       }
@@ -188,21 +263,205 @@ namespace OKExSDK
               }, cts.Token, TaskCreationOptions.LongRunning,
                  TaskScheduler.Default);
         }
-
-        private string Decompress(byte[] baseBytes)
+        public int getCRC32(string value)
         {
-            using (var decompressedStream = new MemoryStream())
-            using (var compressedStream = new MemoryStream(baseBytes))
-            using (var deflateStream = new DeflateStream(compressedStream, CompressionMode.Decompress))
+            if (string.IsNullOrWhiteSpace(value)) return 0;
+            byte[] array = Encoding.ASCII.GetBytes(value);
+            MemoryStream stream = new MemoryStream(array);
+            return new CRC32().GetCrc32(stream);
+        }
+        public Tuple<string, string, string> buildStr_checksum_asks_bids()
+        {
+            List<string> list_checkSumStr = new List<string>(new string[50]);
+            List<string> list_askContents = new List<string>();
+            List<string> list_bidContents = new List<string>();
+            int i = 0;
+            foreach (var bid in baseBids.Reverse())
             {
-                deflateStream.CopyTo(decompressedStream);
-                decompressedStream.Position = 0;
-                using (var streamReader = new StreamReader(decompressedStream))
+                if (i < 50)
                 {
-                    return streamReader.ReadToEnd();
+                    list_checkSumStr[i] = bid.Value[0] + ":" + bid.Value[1];
+                    i += 2;
+                }
+
+                list_bidContents.Add("[" + String.Join(",", bid.Value) + "]");
+            }
+            i = 1;
+            foreach (var ask in baseAsks)
+            {
+                if (i < 50)
+                {
+                    list_checkSumStr[i] = ask.Value[0] + ":" + ask.Value[1];
+                    i += 2;
+                }
+                list_askContents.Add("[" + String.Join(",", ask.Value) + "]");
+            }
+            List<string> removeNull_list_checksum = new List<string>();
+
+            for (int index = 0; index < 50; index++)
+            {
+                if (list_checkSumStr[index] != null)
+                {
+                    removeNull_list_checksum.Add(list_checkSumStr[index]);
+                }
+            }
+            string checksumStr = String.Join(":", removeNull_list_checksum).Replace("\"", "");
+            string asks = string.Join(",", list_askContents);
+            string bids = string.Join(",", list_bidContents);
+            Tuple<string, string, string> obj = new Tuple<string, string, string>(checksumStr, asks, bids);
+            return obj;
+        }
+        public void combineIncrementalData(List<string> incrementalData, string type)
+        {
+            if (type == "bids")
+            {
+                if (baseBids.Count == 0)
+                {
+                    foreach (var content in incrementalData)
+                    {
+                        string[] detail = content.Split(',');
+                        try
+                        {
+                            if (!string.IsNullOrWhiteSpace(detail[0].Replace("\"", "")))
+                            {
+                                baseBids.Add(Convert.ToDouble(detail[0].Replace("\"", "")), detail);
+                            }
+
+                        }
+                        catch (Exception e)
+                        {
+                            File.AppendAllText(@"D:\\error.txt", "CreateDate" + DateTime.Now.ToString() + "detail[0]:" + detail[0].Replace("\"", "") + "\n" + e.Message + "\n" + e.StackTrace + "\n");
+                        }
+                    }
+
+                }
+                else
+                {
+                    if (baseBids.Count > 0)
+                    {
+                        foreach (var content in incrementalData)
+                        {
+                            string[] detail = content.Split(',');
+                            if (string.IsNullOrWhiteSpace(detail[0]))
+                            {
+                                continue;
+                            }
+                            try
+                            {
+                                if (baseBids.Keys.Contains(Convert.ToDouble(detail[0].Replace("\"", ""))))
+                                {
+                                    if (detail[1].Replace("\"", "") == "0")
+                                    {
+                                        if (baseBids.Keys.Contains(Convert.ToDouble(detail[0].Replace("\"", ""))))
+                                        {
+                                            baseBids.Remove(Convert.ToDouble(detail[0].Replace("\"", "")));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        baseBids[Convert.ToDouble(detail[0].Replace("\"", ""))] = detail;
+                                    }
+                                }
+                                else
+                                {
+                                    baseBids.Add(Convert.ToDouble(detail[0].Replace("\"", "")), detail);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                File.AppendAllText(@"D:\\error.txt", "CreateDate" + DateTime.Now.ToString() + "detail[0]:" + detail[0].Replace("\"", "") + "\n" + e.Message + "\n" + e.StackTrace + "\n");
+                            }
+                        }
+                    }
+                }
+            }
+            if (type == "asks")
+            {
+                if (baseAsks.Count == 0)
+                {
+                    foreach (var content in incrementalData)
+                    {
+                        string[] detail = content.Split(',');
+                        if (string.IsNullOrWhiteSpace(detail[0]))
+                        {
+                            continue;
+                        }
+                        try
+                        {
+                            baseAsks.Add(Convert.ToDouble(detail[0].Replace("\"", "")), detail);
+                        }
+                        catch (Exception e)
+                        {
+                            File.AppendAllText(@"D:\\error.txt", "CreateDate" + DateTime.Now.ToString() + "detail[0]:" + detail[0].Replace("\"", "") + "\n" + e.Message + "\n" + e.StackTrace + "\n");
+                        }
+                    }
+
+                }
+                else
+                {
+                    if (baseAsks.Count > 0)
+                    {
+                        foreach (var content in incrementalData)
+                        {
+                            string[] detail = content.Split(',');
+                            if (string.IsNullOrWhiteSpace(detail[0]))
+                            {
+                                continue;
+                            }
+                            try
+                            {
+                                if (baseAsks.Keys.Contains(Convert.ToDouble(detail[0].Replace("\"", ""))))
+                                {
+                                    if (detail[1].Replace("\"", "") == "0")
+                                    {
+                                        if (baseAsks.Keys.Contains(Convert.ToDouble(detail[0].Replace("\"", ""))))
+                                        {
+                                            baseAsks.Remove(Convert.ToDouble(detail[0].Replace("\"", "")));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        baseAsks[Convert.ToDouble(detail[0].Replace("\"", ""))] = detail;
+                                    }
+                                }
+                                else
+                                {
+                                    baseAsks.Add(Convert.ToDouble(detail[0].Replace("\"", "")), detail);
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+                                File.AppendAllText(@"D:\\error.txt", "CreateDate" + DateTime.Now.ToString() + "detail[0]:" + detail[0].Replace("\"", "") + "\n" + e.Message + "\n" + e.StackTrace + "\n");
+                            }
+                        }
+                    }
                 }
             }
         }
+        private string Decompress(byte[] baseBytes)
+        {
+            try
+            {
+                using (var decompressedStream = new MemoryStream())
+                using (var compressedStream = new MemoryStream(baseBytes))
+                using (var deflateStream = new DeflateStream(compressedStream, CompressionMode.Decompress, true))
+                {
+                    deflateStream.CopyTo(decompressedStream);
+                    decompressedStream.Position = 0;
+                    using (var streamReader = new StreamReader(decompressedStream,Encoding.UTF8))
+                    {
+                        return streamReader.ReadToEnd();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+
+        }
+    
         private void setPendingTimer()
         {
             if (pendingTimer == null)

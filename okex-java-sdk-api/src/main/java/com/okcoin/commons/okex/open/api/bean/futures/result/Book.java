@@ -37,4 +37,13 @@ public class Book {
     public String getTimestamp() { return timestamp; }
 
     public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "asks=" + asks +
+                ", bids=" + bids +
+                ", timestamp='" + timestamp + '\'' +
+                '}';
+    }
 }

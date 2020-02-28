@@ -87,5 +87,16 @@ public class Ledger {
         public void setInstrument_id(final String instrument_id) {
             this.instrument_id = instrument_id;
         }
+
+
+        @Override
+        public String toString() {
+            return "Details{" +
+                    "order_id=" + order_id +
+                    ", instrument_id='" + instrument_id + '\'' +
+                    '}';
+        }
     }
+
+
 }

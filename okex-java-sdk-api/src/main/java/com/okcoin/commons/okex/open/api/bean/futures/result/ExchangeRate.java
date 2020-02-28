@@ -11,19 +11,13 @@ public class ExchangeRate {
     /**
      * legal tender pairs
      */
-    private String product_id;
+    private String instrument_id;
     /**
      * exchange rate
      */
     private Double rate;
 
-    public String getProduct_id() {
-        return product_id;
-    }
-
-    public void setProduct_id(String product_id) {
-        this.product_id = product_id;
-    }
+    private String timestamp;
 
     public Double getRate() {
         return rate;
@@ -31,5 +25,21 @@ public class ExchangeRate {
 
     public void setRate(Double rate) {
         this.rate = rate;
+    }
+
+    public String getInstrument_id() {
+        return instrument_id;
+    }
+
+    public void setInstrument_id(String instrument_id) {
+        this.instrument_id = instrument_id;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 }

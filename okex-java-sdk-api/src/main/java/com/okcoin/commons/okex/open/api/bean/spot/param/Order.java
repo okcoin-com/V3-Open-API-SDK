@@ -6,7 +6,7 @@ public class Order {
 
     private String side;
 
-    private String type;
+    private int type;
 
     private String size;
 
@@ -40,11 +40,11 @@ public class Order {
         this.side = side;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 

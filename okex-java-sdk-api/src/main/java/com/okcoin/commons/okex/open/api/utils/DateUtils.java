@@ -114,7 +114,8 @@ public class DateUtils {
      * UNIX timestamp ISO 8601 rule eg: 2018-02-03T05:34:14.110Z
      */
     public static String getUnixTime() {
-        return Instant.now().toString();
+        StringBuilder nowStr = new StringBuilder(Instant.now().toString());
+        return new StringBuilder().append(nowStr.substring(0,nowStr.lastIndexOf("."))).append(nowStr.substring(nowStr.lastIndexOf(".")).substring(0,4)).append(nowStr.substring(nowStr.length()-1)).toString();
     }
 
     /**Date

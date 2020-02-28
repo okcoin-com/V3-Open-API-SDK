@@ -1,10 +1,13 @@
 package com.okcoin.commons.okex.open.api.service.futures.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.okcoin.commons.okex.open.api.bean.futures.result.ExchangeRate;
 import com.okcoin.commons.okex.open.api.bean.futures.result.ServerTime;
 import com.okcoin.commons.okex.open.api.client.APIClient;
 import com.okcoin.commons.okex.open.api.config.APIConfiguration;
 import com.okcoin.commons.okex.open.api.service.GeneralAPIService;
+
+import java.util.List;
 
 /**
  * General api

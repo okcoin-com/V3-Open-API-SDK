@@ -4,26 +4,26 @@ import java.math.BigDecimal;
 
 public class Ledger {
 
-    private  Long ledger_id;
+    private String ledger_id;
 
     private String currency;
 
-    private BigDecimal balance;
+    private String balance;
 
-    private BigDecimal amount;
+    private String amount;
 
-    private BigDecimal fee;
+    private String fee;
 
     private String typeName;
 
     private String timestamp;
 
 
-    public Long getLedger_id() {
+    public String getLedger_id() {
         return ledger_id;
     }
 
-    public void setLedger_id(Long ledger_id) {
+    public void setLedger_id(String ledger_id) {
         this.ledger_id = ledger_id;
     }
 
@@ -35,27 +35,27 @@ public class Ledger {
         this.currency = currency;
     }
 
-    public BigDecimal getBalance() {
+    public String getBalance() {
         return balance;
     }
 
-    public void setBalance(BigDecimal balance) {
+    public void setBalance(String balance) {
         this.balance = balance;
     }
 
-    public BigDecimal getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
 
-    public BigDecimal getFee() {
+    public String getFee() {
         return fee;
     }
 
-    public void setFee(BigDecimal fee) {
+    public void setFee(String fee) {
         this.fee = fee;
     }
 
@@ -73,5 +73,19 @@ public class Ledger {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Ledger{" +
+                "ledger_id='" + ledger_id + '\'' +
+                ", currency='" + currency + '\'' +
+                ", balance='" + balance + '\'' +
+                ", amount='" + amount + '\'' +
+                ", fee='" + fee + '\'' +
+                ", typeName='" + typeName + '\'' +
+                ", timestamp='" + timestamp + '\'' +
+                '}';
     }
 }

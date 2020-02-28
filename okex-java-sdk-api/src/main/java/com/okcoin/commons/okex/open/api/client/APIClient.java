@@ -1,6 +1,6 @@
 package com.okcoin.commons.okex.open.api.client;
 
-import com.alibaba.fastjson.JSON;
+
 import com.okcoin.commons.okex.open.api.bean.ett.result.CursorPager;
 import com.okcoin.commons.okex.open.api.bean.futures.HttpResult;
 import com.okcoin.commons.okex.open.api.config.APIConfiguration;
@@ -8,6 +8,7 @@ import com.okcoin.commons.okex.open.api.constant.APIConstants;
 import com.okcoin.commons.okex.open.api.enums.HttpHeadersEnum;
 import com.okcoin.commons.okex.open.api.exception.APIException;
 import com.okcoin.commons.okex.open.api.utils.DateUtils;
+import com.alibaba.fastjson.JSON;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
@@ -66,19 +67,37 @@ public class APIClient {
     /**
      * Synchronous send request
      */
-    public <T> T executeSync(final Call<T> call) {
+    //解析
+    public <T> T executeSync(final Call<T> call){
         try {
+
             final Response<T> response = call.execute();
+            //System.out.println("response-------------------------"+call.toString());
+            //是否打印config配置信息
             if (this.config.isPrint()) {
+                //打印响应信息
                 this.printResponse(response);
             }
+            //获取状态码
             final int status = response.code();
+            //获取错误信息
             final String message = new StringBuilder().append(response.code()).append(" / ").append(response.message()).toString();
+            //响应成功
             if (response.isSuccessful()) {
                 return response.body();
+                ////如果状态码是400,401,429,500中的任意一个，抛出异常
             } else if (APIConstants.resultStatusArray.contains(status)) {
                 final HttpResult result = JSON.parseObject(new String(response.errorBody().bytes()), HttpResult.class);
-                throw new APIException(result.getCode(), result.getMessage());
+                if(result.getCode() == 0 && result.getMessage() == null){
+                   // System.out.println("错误码："+result.getErrorCode()+"\t错误信息"+result.getErrorMessage());
+                    System.out.println(result);
+                    throw new APIException(result.getErrorCode(),result.getErrorMessage());
+                }else{
+                    //System.out.println("错误码："+result.getCode()+"\t错误信息"+result.getMessage());
+                    //抛出异常
+                    System.out.println(result);
+                    throw new APIException(result.getCode(), result.getMessage());
+                }
             } else {
                 throw new APIException(message);
             }
@@ -93,14 +112,16 @@ public class APIClient {
     public <T> CursorPager<T> executeSyncCursorPager(final Call<List<T>> call) {
         try {
             final Response<List<T>> response = call.execute();
+            System.out.println("输出响应before");
             if (this.config.isPrint()) {
                 this.printResponse(response);
             }
+            System.out.println("输出响应after");
             final int status = response.code();
             final String message = response.code() + " / " + response.message();
             if (response.isSuccessful()) {
                 final Headers headers = response.headers();
-                final CursorPager<T> cursorPager = new CursorPager<>();
+                final CursorPager<T> cursorPager = new CursorPager<T>();
                 cursorPager.setData(response.body());
                 cursorPager.setBefore(headers.get("OK-BEFORE"));
                 cursorPager.setAfter(headers.get("OK-AFTER"));
@@ -113,6 +134,7 @@ public class APIClient {
             }
             throw new APIException(message);
         } catch (final IOException e) {
+            System.out.println("异常信息");
             throw new APIException("APIClient executeSync exception.", e);
         }
     }
@@ -130,12 +152,26 @@ public class APIClient {
                 responseInfo.append("\n\t\t\t").append(HttpHeadersEnum.OK_TO.header()).append(": ").append(response.headers().get(HttpHeadersEnum.OK_TO.header()));
                 responseInfo.append("\n\t\t\t").append(HttpHeadersEnum.OK_LIMIT.header()).append(": ").append(limit);
             }
+            //responseInfo.append("\n\t\t").append("返回数据: ").append(response.toString());
             responseInfo.append("\n\t\t").append("Status: ").append(response.code());
             responseInfo.append("\n\t\t").append("Message: ").append(response.message());
-            responseInfo.append("\n\t\t").append("Body: ").append(JSON.toJSONString(response.body()));
+            if(response.body()!=null){
+                responseInfo.append("\n\t\t").append("Response Body: ").append(JSON.toJSONString(response.body()));
+            }
         } else {
             responseInfo.append("\n\t\t").append("\n\tRequest Error: response is null");
         }
         APIClient.LOG.info(responseInfo.toString());
+    }
+
+    @Override
+    public String toString() {
+        return "APIClient{" +
+                "config=" + config +
+                ", credentials=" + credentials +
+                ", client=" + client +
+                ", retrofit=" + retrofit +
+                ", apiHttp=" + apiHttp +
+                '}';
     }
 }

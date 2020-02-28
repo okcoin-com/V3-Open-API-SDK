@@ -25,6 +25,11 @@ public class SpotPublicChannelTest {
     @Before
     public void connect() {
         WebSocketConfig.publicConnect(webSocketClient);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @After
@@ -34,7 +39,7 @@ public class SpotPublicChannelTest {
     }
 
     /**
-     * 行情频道
+     * 公共-ticker频道
      * Ticker Channel
      */
     @Test
@@ -42,7 +47,6 @@ public class SpotPublicChannelTest {
         //创建一个list集合，添加要订阅的频道名称
         final ArrayList<String> list = new ArrayList<>();
         list.add("spot/ticker:BTC-USDT");
-        list.add("spot/ticker:ETH-USDT");
         webSocketClient.subscribe(list);
         //为保证测试方法不停，需要让线程延迟
         try {
@@ -53,7 +57,7 @@ public class SpotPublicChannelTest {
     }
 
     /**
-     * k线频道
+     * 公共-k线频道
      * Kline Channel
      */
     @Test
@@ -61,7 +65,6 @@ public class SpotPublicChannelTest {
         //创建一个list集合，添加要订阅的频道名称
         final ArrayList<String> list = new ArrayList<>();
         list.add("spot/candle60s:BTC-USDT");
-        list.add("spot/candle180s:ETH-USDT");
         webSocketClient.subscribe(list);
         //为保证测试方法不停，需要让线程延迟
         try {
@@ -72,7 +75,7 @@ public class SpotPublicChannelTest {
     }
 
     /**
-     * 成交频道
+     * 公共-交易频道
      * Trade Channel
      */
     @Test
@@ -80,7 +83,8 @@ public class SpotPublicChannelTest {
         //创建一个list集合，添加要订阅的频道名称
         final ArrayList<String> list = new ArrayList<>();
         list.add("spot/trade:BTC-USDT");
-        list.add("spot/trade:ETH-USDT");
+        //list.add("spot/trade:ETH-USDT");
+
         webSocketClient.subscribe(list);
         //为保证测试方法不停，需要让线程延迟
         try {
@@ -91,14 +95,14 @@ public class SpotPublicChannelTest {
     }
 
     /**
-     * 5档深度
+     * 公共-5档深度
      * Depth5 Channel
      */
     @Test
     public void depth5Channel() {
         //创建一个list集合，添加要订阅的频道名称
         final ArrayList<String> list = new ArrayList<>();
-        list.add("spot/depth5:BTC-USDT");
+        //list.add("spot/depth5:BTC-USDT");
         list.add("spot/depth5:ETH-USDT");
         webSocketClient.subscribe(list);
         //为保证测试方法不停，需要让线程延迟
@@ -110,15 +114,15 @@ public class SpotPublicChannelTest {
     }
 
     /**
-     * 深度
+     * 公共-400档深度
      * Depth Channel
      */
     @Test
     public void depthChannel() {
         //创建一个list集合，添加要订阅的频道名称
         final ArrayList<String> list = new ArrayList<>();
-        list.add("spot/depth:BTC-USDT");
-        list.add("spot/depth:ETH-USDT");
+        //list.add("spot/depth:OKB-USDT");
+        list.add("spot/depth:XRP-USDT");
         webSocketClient.subscribe(list);
         //为保证测试方法不停，需要让线程延迟
         try {
@@ -127,5 +131,25 @@ public class SpotPublicChannelTest {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 公共全量深度
+     * Depth Channel
+     */
+    @Test
+    public void allDepthChannel() {
+        //创建一个list集合，添加要订阅的频道名称
+        final ArrayList<String> list = new ArrayList<>();
+        list.add("spot/depth_l2_tbt:BTC-USDT");
+        webSocketClient.subscribe(list);
+        //为保证测试方法不停，需要让线程延迟
+        try {
+            Thread.sleep(10000000);
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 }

@@ -63,6 +63,7 @@ public class ApiHttp {
     public String execute(Request request) {
         try {
             Response response = this.client.newCall(request).execute();
+            //System.out.println("Response::::::::"+response);
             int status = response.code();
             String bodyString = response.body().string();
             boolean responseIsNotNull = response != null;
@@ -89,7 +90,7 @@ public class ApiHttp {
         if (responseIsNotNull) {
             responseInfo.append("\n\t\t").append("Status: ").append(status);
             responseInfo.append("\n\t\t").append("Message: ").append(message);
-            responseInfo.append("\n\t\t").append("Body: ").append(body);
+            responseInfo.append("\n\t\t").append("Response Body: ").append(body);
         } else {
             responseInfo.append("\n\t\t").append("\n\tRequest Error: response is null");
         }

@@ -30,5 +30,6 @@ namespace OKExSDK.Models.Margin
         /// 买入或卖出的数量
         /// </summary>
         public string size { get; set; }
+        public string order_type { get; set; }
     }
 }

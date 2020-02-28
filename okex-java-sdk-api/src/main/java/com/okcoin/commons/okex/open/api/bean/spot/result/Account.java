@@ -48,4 +48,15 @@ public class Account {
         this.available = available;
     }
 
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id='" + id + '\'' +
+                ", currency='" + currency + '\'' +
+                ", balance='" + balance + '\'' +
+                ", available='" + available + '\'' +
+                ", hold='" + hold + '\'' +
+                '}';
+    }
 }

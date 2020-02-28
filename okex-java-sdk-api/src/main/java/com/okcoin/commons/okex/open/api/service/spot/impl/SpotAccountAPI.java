@@ -1,5 +1,7 @@
 package com.okcoin.commons.okex.open.api.service.spot.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.okcoin.commons.okex.open.api.bean.spot.result.Account;
 import com.okcoin.commons.okex.open.api.bean.spot.result.Ledger;
 import com.okcoin.commons.okex.open.api.bean.spot.result.ServerTimeDto;
@@ -47,18 +49,23 @@ public interface SpotAccountAPI {
     Call<Account> getAccountByCurrency(@Path("currency") String currency);
 
     /**
-     * 币币账单列表
-     *
+     * 币币账单流水
      * @param currency
-     * @param from
-     * @param to
+     * @param before
+     * @param after
      * @param limit
+     * @param type
      * @return
      */
     @GET("api/spot/v3/accounts/{currency}/ledger")
-    Call<List<Ledger>> getLedgersByCurrency(@Path("currency") String currency,
-                                            @Query("from") String from,
-                                            @Query("to") String to,
-                                            @Query("limit") String limit);
+    Call<JSONArray> getLedgersByCurrency(@Path("currency") String currency,
+                                         @Query("before") String before,
+                                         @Query("after") String after,
+                                         @Query("limit") String limit,
+                                         @Query("type") String type);
+
+    //当前账户交易手续等级的费率
+    @GET("/api/spot/v3/trade_fee")
+    Call<JSONObject> getTradeFee();
 
 }

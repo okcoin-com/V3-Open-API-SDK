@@ -23,15 +23,27 @@ public class PpBatchOrder {
      */
     private String price;
 
+    public String getOrder_type() {
+        return order_type;
+    }
+
+    public void setOrder_type(String order_type) {
+        this.order_type = order_type;
+    }
+
+    private String order_type;
+
     public PpBatchOrder() {
     }
 
-    public PpBatchOrder(String client_oid, String size, String type, String match_price, String price) {
+    public PpBatchOrder(String client_oid, String size, String type, String match_price, String price,String order_type) {
         this.client_oid = client_oid;
         this.size = size;
         this.type = type;
         this.match_price = match_price;
         this.price = price;
+        this.order_type = order_type;
+
     }
 
     public String getClient_oid() {

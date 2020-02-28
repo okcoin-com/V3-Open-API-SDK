@@ -2,11 +2,12 @@ package com.okcoin.commons.okex.open.api.service.futures;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.okcoin.commons.okex.open.api.bean.futures.param.CancelOrders;
-import com.okcoin.commons.okex.open.api.bean.futures.param.ClosePosition;
-import com.okcoin.commons.okex.open.api.bean.futures.param.Order;
-import com.okcoin.commons.okex.open.api.bean.futures.param.Orders;
-import com.okcoin.commons.okex.open.api.bean.futures.result.OrderResult;
+import com.okcoin.commons.okex.open.api.bean.futures.param.*;
+import com.okcoin.commons.okex.open.api.bean.futures.result.*;
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 import java.util.List;
 
@@ -27,9 +28,9 @@ public interface FuturesTradeAPIService {
     /**
      * Get the futures contract product position
      *
-     * @param instrumentId The id of the futures contract eg: BTC-USD-0331"
+     * @param instrument_id The id of the futures contract eg: BTC-USD-0331"
      */
-    JSONObject getInstrumentPosition(String instrumentId);
+    JSONObject getInstrumentPosition(String instrument_id);
 
     /**
      * Get all of futures contract account list
@@ -39,18 +40,18 @@ public interface FuturesTradeAPIService {
     /**
      * Get the futures contract currency account
      *
-     * @param currency {@link com.okcoin.commons.okex.open.api.enums.FuturesCurrenciesEnum}
+     * @param underlying {@link com.okcoin.commons.okex.open.api.enums.FuturesCurrenciesEnum}
      *                 eg: FuturesCurrenciesEnum.BTC.name()
      */
-    JSONObject getAccountsByCurrency(String currency);
+    JSONObject getAccountsByCurrency(String underlying);
 
     /**
      * Get the futures contract currency ledger
      *
-     * @param currency {@link com.okcoin.commons.okex.open.api.enums.FuturesCurrenciesEnum}
+     * @param underlying {@link com.okcoin.commons.okex.open.api.enums.FuturesCurrenciesEnum}
      *                 eg: FuturesCurrenciesEnum.BTC.name()
      */
-    JSONArray getAccountsLedgerByCurrency(String currency);
+    JSONArray getAccountsLedgerByCurrency(String underlying,String after,String before,String limit,String type);
 
     /**
      * Get the futures contract product holds
@@ -72,10 +73,12 @@ public interface FuturesTradeAPIService {
     /**
      * Cancel the order
      *
-     * @param instrumentId The id of the futures contract eg: BTC-USD-0331"
-     * @param orderId   the order id provided by okex.com eg: 372238304216064
+     * @param instrument_id The id of the futures contract eg: BTC-USD-0331"
+     * @param order_id   the order id provided by okex.com eg: 372238304216064
      */
-    JSONObject cancelOrder(String instrumentId, long orderId);
+    JSONObject cancelOrderByOrderId(String instrument_id, String order_id);
+
+    JSONObject cancelOrderByClientOid(String instrument_id, String client_oid);
 
     /**
      * Batch Cancel the orders of this product id
@@ -87,63 +90,105 @@ public interface FuturesTradeAPIService {
     /**
      * Get all of futures contract order list
      *
-     * @param status   Order status: 0: waiting for transaction 1: 1: part of the deal 2: all transactions.
-     * @param from    Paging content after requesting this id .
-     * @param to     Paging content prior to requesting this id.
+     * @param state   Order status: 0: waiting for transaction 1: 1: part of the deal 2: all transactions.
+     * @param before    Paging content after requesting this id .
+     * @param after     Paging content prior to requesting this id.
      * @param limit    Number of results per request. Maximum 100. (default 100)
      *                 {@link com.okcoin.commons.okex.open.api.bean.futures.CursorPageParams}
      * @return
      */
-    JSONObject getOrders(String instrument_id, int status, int from, int to, int limit);
+    JSONObject getOrders(String instrument_id, String state, String after, String before, String limit);
 
     /**
      * Get all of futures contract a order by order id
      *
-     * @param instrumentId  eg: futures id
+     * @param instrument_id  eg: futures id
      */
-    JSONObject getOrder(String instrumentId,long orderId);
+    JSONObject getOrderByOrderId(String instrument_id,String order_id);
+    JSONObject getOrderByClientOid(String instrument_id,String client_oid);
 
     /**
      * Get all of futures contract transactions.
      *
-     * @param instrumentId The id of the futures contract eg: BTC-USD-0331"
-     * @param orderId   the order id provided by okex.com eg: 372238304216064
-     * @param from    Paging content after requesting this id .
-     * @param to     Paging content prior to requesting this id.
+     * @param instrument_id The id of the futures contract eg: BTC-USD-0331"
+     * @param order_id   the order id provided by okex.com eg: 372238304216064
+     * @param before    Paging content after requesting this id .
+     * @param after     Paging content prior to requesting this id.
      * @param limit     Number of results per request. Maximum 100. (default 100)
      *                  {@link com.okcoin.commons.okex.open.api.bean.futures.CursorPageParams}
      * @return
      */
-    JSONArray getFills(String instrumentId, long orderId, int from, int to, int limit);
+    JSONArray getFills(String instrument_id, String order_id, String before, String after, String limit);
 
     /**
      * Get the futures LeverRate
      *
-     * @param currency eg: btc
+     * @param underlying eg: btc
      */
-    JSONObject getInstrumentLeverRate(String currency);
+    JSONObject getInstrumentLeverRate(String underlying);
 
 
     /**
      * Change the futures Fixed LeverRate
      *
-     * @param currency       eg: btc
+     * @param underlying       eg: btc-usd
      * @param instrumentId   eg: BTC-USD-190628
      * @param direction      eg: long
      * @param leverage       eg: 10
      * @return
      */
-    JSONObject changeLeverageOnFixed(String currency,String instrumentId,String direction, String leverage);
+    JSONObject changeLeverageOnFixed(String underlying,String instrument_id,String direction, String leverage);
 
     /**
      * Change the futures Cross LeverRate
      *
-     * @param currency      eg: btc
+     * @param underlying      eg: btc
      * @param leverage      eg: 10
      * @return
      */
-    JSONObject changeLeverageOnCross(String currency,String leverage);
+    JSONObject changeLeverageOnCross(String underlying,String leverage);
 
+    JSONObject closePositions(ClosePositions closePositions);
 
+    JSONObject cancelAll(CancelAll cancelAll);
 
+    JSONObject changeMarginMode(ChangeMarginMode changeMarginMode);
+
+    JSONObject changeLiquiMode(ChangeLiquiMode changeLiquiMode);
+
+    Holds getHolds(String instrument_id);
+    /**
+     * 策略委托下单
+     * @param futuresOrderParam
+     * @return
+     */
+    FuturesOrderResult futuresOrder(@Body FuturesOrderParam futuresOrderParam);
+
+    /**
+     * 策略委托撤单
+     * @param cancelFuturesOrder
+     * @return
+     */
+    CancelFuturesOrdeResult cancelFuturesOrder(@Body CancelFuturesOrder cancelFuturesOrder);
+
+    /**
+     * 查看策略委托订单
+     * @param instrument_id
+     * @param order_type
+     * @param status
+     * @param algo_ids
+     * @param after
+     * @param before
+     * @param limit
+     * @return
+     */
+    String findFuturesOrder( String instrument_id,
+                                 String order_type,
+                                 String status,
+                                 String algo_ids,
+                                 String after,
+                                 String before,
+                                 String limit);
+
+    JSONObject getTradeFee();
 }

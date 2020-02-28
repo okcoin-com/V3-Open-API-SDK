@@ -6,7 +6,7 @@ namespace OKExSDK
 {
     public abstract class SdkApi
     {
-        protected string BASEURL = "https://www.okex.com/";
+        protected string BASEURL = "https://www.okex.me/";
 
         protected string _apiKey;
         protected string _secret;

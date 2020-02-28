@@ -4,7 +4,14 @@ import java.util.List;
 
 public class OrderParamDto {
     private String instrument_id;
-    private List<Long> order_ids;
+    private List<String> order_ids;
+    private List<String> client_oids;
+
+    public void setOrder_ids(List<String> order_ids) {
+        this.order_ids = order_ids;
+    }
+
+
 
     public String getInstrument_id() {
         return this.instrument_id;
@@ -14,12 +21,17 @@ public class OrderParamDto {
         this.instrument_id = instrument_id;
     }
 
-
-    public List<Long> getOrder_ids() {
-        return this.order_ids;
+    public List<String> getOrder_ids() {
+        return order_ids;
+    }
+    public List<String> getClient_oids() {
+        return client_oids;
     }
 
-    public void setOrder_ids(final List<Long> order_ids) {
-        this.order_ids = order_ids;
+    public void setClient_oids(List<String> client_oids) {
+        this.client_oids = client_oids;
     }
+
+
+
 }

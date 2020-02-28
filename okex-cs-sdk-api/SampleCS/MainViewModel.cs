@@ -19,6 +19,7 @@ namespace SampleCS
         public MainViewModel()
         {
             this.ordertypes = new Dictionary<string, string>();
+            this.strategy_type = new Dictionary<string, string>();
             this.ordertypes.Add("开多", "1");
             this.ordertypes.Add("开空", "2");
             this.ordertypes.Add("平多", "3");
@@ -30,6 +31,10 @@ namespace SampleCS
             this.transferTypes.Add("币币杠杆", "5");
             this.transferTypes.Add("钱包", "6");
             this.transferTypes.Add("ETT", "7");
+            this.strategy_type.Add("普通委托", "0");
+            this.strategy_type.Add("只做Maker", "1");
+            this.strategy_type.Add("全部成交或立即取消", "2");
+            this.strategy_type.Add("立即成交并取消剩余", "3");
 
             this.destinationTypes.Add("OKCoin国际", "2");
             this.destinationTypes.Add("OKEx", "3");
@@ -108,13 +113,20 @@ namespace SampleCS
         }
 
         private Dictionary<string, string> ordertypes;
-
+        private Dictionary<string, string> strategy_type;
         public Dictionary<string, string> OrderTypes
         {
             get { return ordertypes; }
             set { ordertypes = value; }
         }
-
+        /// <summary>
+        /// 策略类型
+        /// </summary>
+        public Dictionary<string, string> StrategyTypes
+        {
+            get { return strategy_type; }
+            set { ordertypes = value; }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void RaisePropertyChanged(string propertyName)
