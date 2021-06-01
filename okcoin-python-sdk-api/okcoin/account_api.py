@@ -21,7 +21,8 @@ class AccountAPI(Client):
 
     # coin withdraw
     def coin_withdraw(self, currency, amount, destination, to_address, trade_pwd, fee):
-        params = {'currency': currency, 'amount': amount, 'destination': destination, 'to_address': to_address, 'trade_pwd': trade_pwd, 'fee': fee}
+        params = {'currency': currency, 'amount': amount, 'destination': destination, 'to_address': to_address,
+                  'trade_pwd': trade_pwd, 'fee': fee}
         return self._request_with_params(POST, COIN_WITHDRAW, params)
 
     # query the fee of coin withdraw
@@ -44,13 +45,13 @@ class AccountAPI(Client):
         params = {}
         if currency:
             params['currency'] = currency
-        if type:
+        elif type:
             params['type'] = type
-        if after:
+        elif after:
             params['after'] = after
-        if before:
+        elif before:
             params['before'] = before
-        if limit:
+        elif limit:
             params['limit'] = limit
         return self._request_with_params(GET, LEDGER_RECORD, params, cursor=True)
 
@@ -63,7 +64,7 @@ class AccountAPI(Client):
         params = {}
         if account_type:
             params['account_type'] = account_type
-        if valuation_currency:
+        elif valuation_currency:
             params['valuation_currency'] = valuation_currency
         return self._request_with_params(GET, ASSET_VALUATION, params)
 
@@ -76,10 +77,17 @@ class AccountAPI(Client):
         return self._request_without_params(GET, COIN_TOP_UP_RECORD + str(currency))
 
     # coin transfer
-    def coin_transfer(self, currency, amount, account_from, account_to, sub_account='', instrument_id=''):
+    def coin_transfer(self, currency, amount, account_from, account_to, sub_account='', instrument_id='',
+                      to_instrument_id=''):
         params = {'currency': currency, 'amount': amount, 'from': account_from, 'to': account_to}
         if sub_account:
             params['sub_account'] = sub_account
-        if instrument_id:
+        elif instrument_id:
             params['instrument_id'] = instrument_id
+        elif to_instrument_id:
+            params['to_instrument_id'] = to_instrument_id
         return self._request_with_params('POST', COIN_TRANSFER, params)
+
+    def sub_balance(self, sub_account):
+        params = {'sub-account': sub_account}
+        return self._request_with_params('GET', SUB_BAN, params)

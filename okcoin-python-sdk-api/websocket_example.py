@@ -438,6 +438,8 @@ url = 'wss://real.okcoin.com:10442/ws/v3'
 # channels = ["spot/margin_account:BTC-USDT"]
 # 用户交易频道
 # channels = ["spot/order:BTC-USDT"]
+# 用户策略委托频道
+# channels = ["spot/order_algo:LTC-USDT"]
 
 
 loop = asyncio.get_event_loop()

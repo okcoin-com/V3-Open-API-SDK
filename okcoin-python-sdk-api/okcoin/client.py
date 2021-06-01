@@ -19,7 +19,6 @@ class Client(object):
             request_path = request_path + utils.parse_params_to_str(params)
         # url
         url = c.API_URL + request_path
-
         # 获取本地时间
         timestamp = utils.get_timestamp()
         # print(timestamp)
@@ -54,13 +53,12 @@ class Client(object):
             response = requests.get(url, headers=header)
         elif method == c.POST:
             response = requests.post(url, data=body, headers=header)
-            #response = requests.post(url, json=body, headers=header)
         elif method == c.DELETE:
             response = requests.delete(url, headers=header)
 
         # exception handle
         if not str(response.status_code).startswith('2'):
-            raise exceptions.OkexAPIException(response)
+            raise exceptions.OkcoinAPIException(response)
         try:
             res_header = response.headers
             if cursor:
@@ -75,7 +73,7 @@ class Client(object):
                 return response.json()
 
         except ValueError:
-            raise exceptions.OkexRequestException('Invalid Response: %s' % response.text)
+            raise exceptions.OkcoinRequestException('Invalid Response: %s' % response.text)
 
     def _request_without_params(self, method, request_path):
         return self._request(method, request_path, {})

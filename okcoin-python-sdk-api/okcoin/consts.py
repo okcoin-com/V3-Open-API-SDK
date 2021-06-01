@@ -34,6 +34,19 @@ COIN_TOP_UP_RECORDS = '/api/account/v3/deposit/history'
 COIN_TOP_UP_RECORD = '/api/account/v3/deposit/history/'
 CURRENCIES_INFO = '/api/account/v3/currencies'
 COIN_FEE = '/api/account/v3/withdrawal/fee'
+SUB_BAN = '/api/account/v3/sub-account'
+
+# fiat
+FIAT_DEPOSIT = '/api/account/v3/fiat/deposit'
+FIAT_CANCEL_DEPOSIT = '/api/account/v3/fiat/cancel_deposit'
+FIAT_DEPOSIT_DETAIL = '/api/account/v3/fiat/deposit/detail'
+FIAT_DEPOSIT_DETAILS = '/api/account/v3/fiat/deposit/details'
+FIAT_WITHDRAWAL = '/api/account/v3/fiat/withdraw'
+FIAT_CANCEL_WITHDRAWAL = '/api/account/v3/fiat/cancel_withdraw'
+FIAT_WITHDRAWAL_DETAIL = '/api/account/v3/fiat/withdraw/detail'
+FIAT_WITHDRAWAL_DETAILS = '/api/account/v3/fiat/withdraw/details'
+FIAT_CHANNEL = '/api/account/v3/fiat/channel'
+
 
 # spot
 SPOT_ACCOUNT_INFO = '/api/spot/v3/accounts'
@@ -53,6 +66,12 @@ SPOT_TICKER = '/api/spot/v3/instruments/ticker'
 SPOT_SPECIFIC_TICKER = '/api/spot/v3/instruments/'
 SPOT_DEAL = '/api/spot/v3/instruments/'
 SPOT_KLINE = '/api/spot/v3/instruments/'
+SPOT_MODIFY = '/api/spot/v3/amend_order/'
+SPOT_MODIFY_BATCH = '/api/spot/v3/amend_batch_orders/'
+SPOT_ALGO_PLACE = '/api/spot/v3/order_algo'
+SPOT_ALGO_CANCEL = '/api/spot/v3/cancel_batch_algos'
+SPOT_TRADE_FEE = '/api/spot/v3/trade_fee'
+SPOT_ALGO_LIST = '/api/spot/v3/algo'
 
 # lever
 LEVER_ACCOUNT = '/api/margin/v3/accounts'
@@ -73,3 +92,11 @@ LEVEL_ORDERS_PENDING = '/api/margin/v3/orders_pending'
 LEVER_ORDER_INFO = '/api/margin/v3/orders/'
 LEVER_FILLS = '/api/margin/v3/fills'
 LEVER_MARK_PRICE = '/api/margin/v3/instruments/'
+LEVER_AMEND_ORDER = '/api/margin/v3/amend_order/'
+LEVER_AMEND_BATCH = '/api/margin/v3/amend_batch_orders/'
+
+# status
+STATUS = '/api/system/v3/status'
+
+# oracle
+ORACLE = '/api/market/v3/oracle'

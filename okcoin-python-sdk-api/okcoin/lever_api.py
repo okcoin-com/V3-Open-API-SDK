@@ -20,11 +20,11 @@ class LeverAPI(Client):
         params = {}
         if after:
             params['after'] = after
-        if before:
+        elif before:
             params['before'] = before
-        if limit:
+        elif limit:
             params['limit'] = limit
-        if type:
+        elif type:
             params['type'] = type
         return self._request_with_params(GET, LEVER_LEDGER_RECORD + str(instrument_id) + '/ledger', params, cursor=True)
 
@@ -42,29 +42,58 @@ class LeverAPI(Client):
 
     def get_specific_borrow_coin(self, instrument_id, status='', after='', before='', limit=''):
         params = {'status': status, 'after': after, 'before': before, 'limit': limit}
-        return self._request_with_params(GET, LEVER_SPECIFIC_CONFIG + str(instrument_id) + '/borrowed', params, cursor=True)
+        return self._request_with_params(GET, LEVER_SPECIFIC_CONFIG + str(instrument_id) + '/borrowed', params,
+                                         cursor=True)
 
     # borrow coin
-    def borrow_coin(self, instrument_id, client_oid, currency, amount):
-        params = {'instrument_id': instrument_id, 'client_oid': client_oid, 'currency': currency, 'amount': amount}
+    def borrow_coin(self, instrument_id, currency, amount, client_oid=''):
+        params = {'instrument_id': instrument_id, 'currency': currency, 'amount': amount}
+        if client_oid:
+            params['client_oid'] = client_oid
         return self._request_with_params(POST, LEVER_BORROW_COIN, params)
 
     # repayment coin
-    def repayment_coin(self, instrument_id, currency, amount, borrow_id=''):
+    def repayment_coin(self, instrument_id, currency, amount, borrow_id='', client_oid=''):
         params = {'instrument_id': instrument_id, 'currency': currency, 'amount': amount}
         if borrow_id:
             params['borrow_id'] = borrow_id
+        elif client_oid:
+            params['client_oid'] = client_oid
         return self._request_with_params(POST, LEVER_REPAYMENT_COIN, params)
 
     # take order
-    def take_order(self, instrument_id, side, margin_trading, client_oid='', type='', order_type='', price='', size='', notional=''):
-        params = {'instrument_id': instrument_id, 'side': side, 'margin_trading': margin_trading, 'client_oid': client_oid, 'type': type, 'order_type': order_type, 'price': price, 'size': size, 'notional': notional}
+    def take_order(self, instrument_id, side, margin_trading, client_oid='', type='', order_type='', price='', size='',
+                   notional=''):
+        params = {'instrument_id': instrument_id, 'side': side, 'margin_trading': margin_trading,
+                  'client_oid': client_oid, 'type': type, 'order_type': order_type, 'price': price, 'size': size,
+                  'notional': notional}
         return self._request_with_params(POST, LEVER_ORDER, params)
 
     def take_orders(self, params):
         return self._request_with_params(POST, LEVER_ORDERS, params)
 
-    # revoke order
+    def amend_order(self, instrument_id, cancel_on_fail, order_id='', client_oid='', request_id='', new_size='',
+                    new_price=''):
+        params = {'cancel_on_fail': cancel_on_fail}
+        if order_id:
+            params['order_id'] = order_id
+        elif client_oid:
+            params['client_oid'] = client_oid
+        elif request_id:
+            params['request_id'] = request_id
+        elif new_size:
+            params['new_size'] = new_size
+        elif new_price:
+            params['new_price'] = new_price
+
+        return self._request_with_params(POST, LEVER_AMEND_ORDER + str(instrument_id), params)
+
+    def amend_batch_orders(self, instrument_id, amend_data):
+        params = {'amend_data': amend_data}
+        return self._request_with_params(POST, LEVER_AMEND_BATCH+str(instrument_id), params)
+
+        # revoke order
+
     def revoke_order(self, instrument_id, order_id='', client_oid=''):
         params = {'instrument_id': instrument_id}
         if order_id:
@@ -99,7 +128,8 @@ class LeverAPI(Client):
             return self._request_with_params(GET, LEVER_ORDER_INFO + str(client_oid), params)
 
     def get_fills(self, instrument_id, order_id, after='', before='', limit=''):
-        params = {'instrument_id': instrument_id, 'order_id': order_id, 'after': after, 'before': before, 'limit': limit}
+        params = {'instrument_id': instrument_id, 'order_id': order_id, 'after': after, 'before': before,
+                  'limit': limit}
         return self._request_with_params(GET, LEVER_FILLS, params, cursor=True)
 
     def get_leverage(self, instrument_id):
@@ -111,3 +141,4 @@ class LeverAPI(Client):
 
     def get_mark_price(self, instrument_id):
         return self._request_without_params(GET, LEVER_MARK_PRICE + str(instrument_id) + '/mark_price')
+
