@@ -8,7 +8,7 @@ export function AuthenticatedClient(
   key: string,
   secret: string,
   passphrase: string,
-  apiUri = 'https://www.okex.com',
+  apiUri = 'https://www.okcoin.com',
   timeout = 3000,
   axiosConfig = {}
 ): any {
