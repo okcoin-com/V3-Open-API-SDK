@@ -39,7 +39,7 @@ if __name__ == '__main__':
     # 资金划转
     # result = accountAPI.coin_transfer('ltc', '0.1', '3', '9')
     # 提币
-    # result = accountAPI.coin_withdraw('XRP', 1, 4, '', "", 0.0005)
+    # result = accountAPI.coin_withdraw('XRP', 1, 4, '',  0.0005)
     # 提币手续费
     # result = accountAPI.get_coin_fee('btc')
     # 获取账户资产估值
@@ -58,6 +58,10 @@ if __name__ == '__main__':
     # result = accountAPI.get_top_up_record('btc')
     # 获取子账户余额信息
     # result = accountAPI.sub_balance('')
+    # 闪电网络充币
+    # result = accountAPI.deposit_lightning(ccy='USDT', amount='10', to='')
+    # 闪电网络提币
+    # result = accountAPI.withdrawal_lightning(currency='USDT', invoice='')
     # print(time + json.dumps(result))
     # logging.info("result:" + json.dumps(result))
 

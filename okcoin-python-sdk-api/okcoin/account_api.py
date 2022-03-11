@@ -20,9 +20,9 @@ class AccountAPI(Client):
         return self._request_without_params(GET, CURRENCY_INFO + str(currency))
 
     # coin withdraw
-    def coin_withdraw(self, currency, amount, destination, to_address, trade_pwd, fee):
+    def coin_withdraw(self, currency, amount, destination, to_address, fee):
         params = {'currency': currency, 'amount': amount, 'destination': destination, 'to_address': to_address,
-                  'trade_pwd': trade_pwd, 'fee': fee}
+                  'fee': fee}
         return self._request_with_params(POST, COIN_WITHDRAW, params)
 
     # query the fee of coin withdraw
@@ -91,3 +91,11 @@ class AccountAPI(Client):
     def sub_balance(self, sub_account):
         params = {'sub-account': sub_account}
         return self._request_with_params('GET', SUB_BAN, params)
+
+    def deposit_lightning(self, ccy, amount, to=''):
+        params = {'ccy': ccy, 'amount': amount, 'to': to}
+        return self._request_with_params('GET', DEPOSIT_LI, params)
+
+    def withdrawal_lightning(self, currency, invoice, memo=''):
+        params = {'currency': currency, 'invoice': invoice, 'memo': memo}
+        return self._request_with_params(POST, WITHDRAWAL_LI, params)

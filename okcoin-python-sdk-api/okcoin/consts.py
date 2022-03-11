@@ -1,4 +1,3 @@
-
 # http header
 API_URL = 'https://www.okcoin.com'
 CONTENT_TYPE = 'Content-Type'
@@ -6,7 +5,6 @@ OK_ACCESS_KEY = 'OK-ACCESS-KEY'
 OK_ACCESS_SIGN = 'OK-ACCESS-SIGN'
 OK_ACCESS_TIMESTAMP = 'OK-ACCESS-TIMESTAMP'
 OK_ACCESS_PASSPHRASE = 'OK-ACCESS-PASSPHRASE'
-
 
 ACEEPT = 'Accept'
 COOKIE = 'Cookie'
@@ -35,6 +33,8 @@ COIN_TOP_UP_RECORD = '/api/account/v3/deposit/history/'
 CURRENCIES_INFO = '/api/account/v3/currencies'
 COIN_FEE = '/api/account/v3/withdrawal/fee'
 SUB_BAN = '/api/account/v3/sub-account'
+DEPOSIT_LI = '/api/account/v3/deposit-lightning'
+WITHDRAWAL_LI = '/api/account/v3/withdrawal-lightning'
 
 # fiat
 FIAT_DEPOSIT = '/api/account/v3/fiat/deposit'
@@ -46,7 +46,6 @@ FIAT_CANCEL_WITHDRAWAL = '/api/account/v3/fiat/cancel_withdraw'
 FIAT_WITHDRAWAL_DETAIL = '/api/account/v3/fiat/withdraw/detail'
 FIAT_WITHDRAWAL_DETAILS = '/api/account/v3/fiat/withdraw/details'
 FIAT_CHANNEL = '/api/account/v3/fiat/channel'
-
 
 # spot
 SPOT_ACCOUNT_INFO = '/api/spot/v3/accounts'
