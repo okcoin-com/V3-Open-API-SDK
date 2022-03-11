@@ -10,7 +10,7 @@ export class V3WebsocketClient extends EventEmitter {
   private socket?: WebSocket;
   private interval?: NodeJS.Timeout | null;
 
-  constructor(websocketURI = 'wss://real.okcoin.com:10442/ws/v3') {
+  constructor(websocketURI = 'wss://real.okcoin.com:8443/ws/v3') {
     super();
     this.websocketUri = websocketURI;
   }

@@ -44,7 +44,7 @@ class Websocket extends Utils{
         $worker = new Worker();
 
         // 线上
-        $url = "ws://real.okcoin.com:10442/ws/v3";
+        $url = "ws://real.okcoin.com:8443/ws/v3";
 
         $worker->onWorkerStart = function($worker) use ($url){
             // ssl需要访问443端口

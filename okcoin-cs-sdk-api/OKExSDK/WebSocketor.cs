@@ -14,7 +14,7 @@ namespace OKCoinSDK
 {
     public class WebSocketor : IDisposable
     {
-        string url = "wss://real.okex.com:10442/ws/v3";
+        string url = "wss://real.okex.com:8443/ws/v3";
         ClientWebSocket ws = null;
         CancellationTokenSource cts = new CancellationTokenSource();
         public event WebSocketPushHandler WebSocketPush;
