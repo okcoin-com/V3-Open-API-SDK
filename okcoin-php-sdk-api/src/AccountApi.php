@@ -16,7 +16,7 @@ class AccountApi extends Utils
     const ACCOUNT_COIN_WALLET_INFO = '/api/account/v3/wallet/';
     const ACCOUNT_TRANSFER = '/api/account/v3/transfer';
     const ACCOUNT_WITHDRAWAL = '/api/account/v3/withdrawal';
-    const ACCOUNT_LEGER = '/api/account/v3/ledger/';
+    const ACCOUNT_LEDGER = '/api/account/v3/ledger/';
     const ACCOUNT_DEPOSIT_ADDRESS = '/api/account/v3/deposit/address';
     const ACCOUNT_WITHDRAWAL_HISTORY = '/api/account/v3/withdrawal/history/';
     const ACCOUNT_COIN_WITHDRAWAL_HISTORY = '/api/account/v3/withdrawal/history/';
@@ -69,7 +69,7 @@ class AccountApi extends Utils
     }
 
     // 流水
-    public function getLeger($currency='', $after='', $before='', $limit='')
+    public function getLedger($currency='', $after='', $before='', $limit='')
     {
         $params = [];
         if ($currency) $params['currency'] = $currency;
@@ -77,7 +77,7 @@ class AccountApi extends Utils
         if ($before) $params['before'] = $before;
         if ($limit) $params['before'] = $before;
 
-        return $this->request(self::ACCOUNT_LEGER, $params, 'GET', true);
+        return $this->request(self::ACCOUNT_LEDGER, $params, 'GET', true);
     }
 
     // 流水
